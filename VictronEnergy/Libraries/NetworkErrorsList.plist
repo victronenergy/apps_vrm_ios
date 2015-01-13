@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Errors</key>
+	<dict>
+		<key>200</key>
+		<dict>
+			<key>show</key>
+			<false/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<true/>
+			<key>message</key>
+			<string>Put here either a message</string>
+		</dict>
+		<key>206</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>There has been a connection issue</string>
+		</dict>
+		<key>400</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>There has been a connection issue</string>
+		</dict>
+		<key>402</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>You are not allowed to acces this information</string>
+		</dict>
+		<key>403</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>Wrong email or password</string>
+		</dict>
+		<key>404</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>Wrong email or password!</string>
+		</dict>
+		<key>412</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>Version is out-of-date, please update the app in the App Store</string>
+		</dict>
+		<key>500</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>There has been a connection issue</string>
+		</dict>
+		<key>501</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>There has been a connection issue</string>
+		</dict>
+		<key>502</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>There has been a connection issue</string>
+		</dict>
+		<key>504</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>There has been a connection issue</string>
+		</dict>
+		<key>505</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>Version is out-of-date, please update the app in the App Store</string>
+		</dict>
+		<key>506</key>
+		<dict>
+			<key>show</key>
+			<true/>
+			<key>blocking</key>
+			<false/>
+			<key>proceed</key>
+			<false/>
+			<key>message</key>
+			<string>There has been a connection issue</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

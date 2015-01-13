@@ -1,0 +1,172 @@
+/* 
+  Localizable.strings
+  VictronEnergy
+
+  Created by Victron Energy on 3/21/13.
+  Copyright (c) 2013 Victron Energy. All rights reserved.
+*/
+
+"forgot_password_button" = "Forgot password?";
+"login_button" = "Login";
+"demo_button" = "Demo";
+"searchbar_placeholdertext" = "Search";
+"alarms_label" = "%i Alarms";
+"Last update label" = "Not sending data since: %@";
+"in_alarm_since_label" = "In alarm since: %@";
+"log_out_button" = "Do you want to log out - %@?";
+"open_settings_website_button" = "Open VRM Portal";
+"open_site_in_portal_website_button" = "Open site in VRM Portal";
+"manage_site_website_button" = "Manage site";
+"settingsView_titlelabel" = "Settings";
+
+"back_button_webview" = "Back";
+"website_title" = "VRM Portal";
+
+"about_title" = "About";
+
+"error_title" = "Error!";
+"error_message" = "Failed to load website";
+"error_message_cancel_button" = "Ok";
+"no_email_title" = "Victron Energy";
+"no_email_message" = "Please enter a valid email addres.";
+"no_password_message" = "Please enter a password.";
+"no_sites_found" = "No sites found";
+
+"alert_Yes" = "Yes";
+"alert_No" = "No";
+"delete_image" = "Do you want to delete this image?";
+
+"loading_siteList_cell" = "loading";
+
+"temperature_extender_label" = "%.2f%@C";
+
+"battery_description" = "soc : %@ activeAlarms : %i";
+"site_description" = "name : %@ activeAlarms : %i";
+
+"input_text_open" = "Open";
+"input_text_closed" = "Closed";
+
+"status_alarm" = "Status alarm";
+"status_ok" = "Status OK";
+"status_old" = "Data older than two weeks";
+
+"widget_header_grid" = "GRID";
+"widget_header_genset" = "GENSET";
+"widget_header_ac_load" = "AC LOAD";
+"widget_header_battery_state" = "BATTERY STATE";
+"widget_header_dc_power_system" = "DC POWER SYSTEM";
+"widget_header_pv_power" = "PV POWER";
+"widget_header_battery_soc" = "BATTERY SOC";
+
+"widget_loading" = "Loading";
+
+// "-" for now because not yet decided what to do in this situation
+"widget_no_data" = "-";
+
+
+"output_title" = "OUTPUT";
+"input_title" = "INPUT";
+"temperature_title" =  "TEMPERATURE";
+
+"ac_load_title" = "AC Load";
+
+"ac_in_grid" = "Grid";
+"ac_in_genset" = "Genset";
+
+"voltage_label" = "%@V";
+"voltageIN_label" = "%@V";
+"voltageOUT_label" = "%@V";
+"voltageDC_label" = "%@V";
+"ttg_label" = "%@h %.0fm";
+"ttg_label_empty" = "%@h %@m";
+"consumed_label" = "%@Ah";
+"current_label" = "%@A";
+"currentIN_label" = "%@A";
+"currentDC_label" = "%@A";
+"amphoursOUT_label" = "%@A";
+"amphours_label" = "%@A";
+"dcSystem_label" = "%@A";
+"soc_label" = "%@%%";
+"powerIN_label" = "%@VA";
+"powerOUT_label" = "%@VA";
+"solar_amphours_label" = "%@A";
+"solar_watts_label" = "%@W";
+"pv_power_out_label" = "%@VA";
+"pv_watts_label" = "%.fW";
+"pv_watts_label_dotted" = "---@W";
+"battery_watts_label" = "%@W";
+"dcSystem_watts_label" = "%@W";
+
+"sms_Output1" = "output 1";
+"sms_Output2" = "output 2";
+"sms_on" = "%@ on";
+"sms_off" = "%@ off";
+
+"button_select_IO_Extender_output" = "Select output";
+
+"generator_state_running" = "Running";
+"generator_state_stopped" = "Stopped";
+
+"generator_button_stop" = "Stop Generator";
+"generator_button_start" = "Start Generator";
+"generator_button_not_set" = "Start/Stop Generator";
+
+"settings_not_set_message" = "Click on the settings icon to setup this feature";
+"back_button_title" = "Back";
+"graphs_button_title" = "Graphs";
+"historic_data_button_title" = "Historical data";
+"detailSettingsView_title" = "IO settings";
+
+"deepest_discharge" = "%@Ah";
+"last_discharge" = "%@Ah";
+"average_discharge" = "%@Ah";
+"charge_cycles" = "%@";
+"full_discharges" = "%@";
+"total_ah_drawn" = "%@Ah";
+"minimum_voltage" = "%@V";
+"maximum_voltage" = "%@V";
+"time_since_last_full_charge" = "%@h %.0fm";
+"time_since_last_full_charge_empty" = "%@h %@m";
+"automatic_syncs" = "%@";
+"low_voltage_alarms" = "%@";
+"high_voltage_alarms" = "%@";
+"low_starter_voltage_alarms" = "%@";
+"high_starter_voltage_alarms" = "%@";
+"minimum_starter_voltage" = "%@V";
+"maximum_starter_voltage" = "%@V";
+
+"site_detail_title" = "Site details";
+"site_summary_title" = "Site";
+"site_summaries_title" = "Sites";
+"historic_data_title" = "Historical data";
+"select_output_title" = "Select output";
+
+"take_photo_button_title" = "Take photo";
+"photo_library_button_title" = "Photo library";
+"photo_picker_menu_close_button" = "Close";
+
+"no_internet_connection_title" = "Error";
+"no_internet_connection_text" = "The Internet connection appears to be offline";
+
+"no_phone_number_text" = "There is no phonenumber defined for this site";
+"no_time_update" = "Not sending data since: ---";
+"in_alarm_since_no_time" = "In alarm since: ---";
+
+"gallery_no_rights" = "No photos yet for this site, to add photos you need to get admin rights to this installation";
+
+"no_data_text" = "Oops! The combination of configured devices does not match an existing overview. Probably there is a mistake in the configuration. Go to settings by pressing the (    ) button on the top of this screen. Then go to \'Manage site\' to configure the connected devices.\n\nThe available overviews are:\n • BMV \n • Multi or Quattro\n • BMV + Multi or Quattro\n • BMV + MPPT 150/70 + Multi or Quattro\n • BMV + Multi or Quattro + PV Inverter";
+
+"no_data_text_no_rights" = "Oops! The combination of configured devices does not match an existing overview. Probably there is a mistake in the configuration. Contact an administrator of the site to change the configuration.\n\nThe available overviews are:\n • BMV \n • Multi or Quattro\n • BMV + Multi or Quattro\n • BMV + MPPT 150/70 + Multi or Quattro\n • BMV + Multi or Quattro + PV Inverter";
+
+"about_text_1" = "Monitor and manage your Victron Energy system. Login with your VRM account, and see all your sites in a list. Tap a site to see its system diagram, current system status and energy flow. Swipe left and right to go from site to site.";
+
+"about_header_2" = "\n\nSupported systems";
+"about_text_2" = "\n- BMV \n- Multi or Quattro \n- BMV + Multi or Quattro \n- BMV + MPPT 150/70 + Multi or Quattro \n- BMV + Multi or Quattro + PV Inverter";
+
+"about_header_3" = "\n\nIO Extender";
+"about_text_3" = "\nThe VRM app also allows you to monitor and control the inputs, temperature and outputs of the IO Extender. Use the app to open and close the IO Extender outputs.";
+
+"about_header_4" = "\n\nStart and stop a genset";
+"about_text_4" = "\nConfigure to which output your genset is connected, and let the app generate the sms code which will start and stop the genset.";
+
+"about_text_5" = "\n\nThis app requires your system to be connected to the internet through a Victron Global Remote, Victron Ethernet Remote or Color Control GX.";

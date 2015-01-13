@@ -1,0 +1,12 @@
+//
+// Prefix header for all source files of the 'VictronLogicTests' target in the 'VictronLogicTests' project
+//
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import "Constants.h"
+#import "Tools.h"
+#import "NetworkHandler.h"
+#import "Victron Energy-Prefix.pch"
+#endif

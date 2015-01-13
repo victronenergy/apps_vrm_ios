@@ -1,0 +1,25 @@
+//
+// Prefix header for all source files of the 'Victron Energy' target in the 'Victron Energy' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import "Constants.h"
+    #import <AFNetworking.h>
+    #import "M2MNetworkErrorHandler.h"
+    #import <SVProgressHUD.h>
+    #import "Tools.h"
+    #import "GAITracker.h"
+    #import "GAI.h"
+    #import "GAITrackedViewController.h"
+    #import "GAIDictionaryBuilder.h"
+    #import "GAIFields.h"
+    #import "GAILogger.h"
+#endif

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>F3063E10-B393-41AD-B6FF-0C6B77EB9673</string>
+	<key>IDESourceControlProjectName</key>
+	<string>VictronEnergy</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>3F43BB56AEE039E6D7C4C88F82369EE947F97729</key>
+		<string>israfel.m2mobi.com:victron/iphone/victron.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>VictronEnergy.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>3F43BB56AEE039E6D7C4C88F82369EE947F97729</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>israfel.m2mobi.com:victron/iphone/victron.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>3F43BB56AEE039E6D7C4C88F82369EE947F97729</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>3F43BB56AEE039E6D7C4C88F82369EE947F97729</string>
+			<key>IDESourceControlWCCName</key>
+			<string>victron</string>
+		</dict>
+	</array>
+</dict>
+</plist>
