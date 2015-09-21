@@ -2,8 +2,8 @@
 //  SettingsDetailTableViewController.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 4/12/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 4/12/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "SettingsDetailTableViewController.h"
@@ -19,6 +19,8 @@
 #import "SiteDetailViewController.h"
 #import "SitesScrollViewController.h"
 #import "M2MSelectOutputTableViewController.h"
+#import "M2MLoginService.h"
+#import "M2MExtendersService.h"
 
 
 @interface SettingsDetailTableViewController ()
@@ -72,21 +74,24 @@
 -(void)viewWillAppear:(BOOL)animated{
 
     if (self.selectedSite.hasIOExtender == 1) {
-        NSString *reloadExtenderName = [NSString stringWithFormat:@"extender%ld", (long)self.selectedSite.siteID];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableViewWithExtenderData:) name:reloadExtenderName object:nil];
         [self getExtenders];
     }
 }
 
 -(void)getExtenders
 {
-    [Extender getExtenders];
+    __weak SettingsDetailTableViewController *weakSelf = self;
+
+    [[M2MExtendersService new] loadExtendersForSite:self.selectedSite.siteID success:^(NSArray *extenders){
+        weakSelf.extendersList = [extenders mutableCopy];
+        [weakSelf reloadTableView];
+    } failure:^(NSInteger statusCode){
+        [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
+    }];
 }
 
--(void)reloadTableViewWithExtenderData:(NSNotification *)notification
+- (void)reloadTableView
 {
-    self.extendersList = [[notification userInfo]objectForKey:@"extenders"];
-
     self.outputList = [[NSMutableArray alloc] init];
 
     for (ExtenderInfo *extender in self.extendersList){
@@ -239,7 +244,7 @@
     }
 
     NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-    [postDict setValue:[Data sharedData].sessionId forKey:KEY_SESSION_ID];
+    [postDict setValue:[M2MLoginService sharedInstance].currentSessionId forKey:KEY_SESSION_ID];
     [postDict setValue:@"1" forKey:KEY_DEVICE_ID];
     [postDict setValue:[NSNumber numberWithInteger:self.selectedSite.siteID] forKey:KEY_SITE_ID];
     [postDict setValue:[NSNumber numberWithBool:self.siteHasGenerator] forKey:KEY_HAS_GENERATOR];
@@ -273,27 +278,18 @@
             [manager POST:URL_SERVER_LOGIN parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
                 [SVProgressHUD dismiss];
-                [Data sharedData].sessionId=[responseObject objectForKey:KEY_SESSION_ID];
+                [M2MLoginService sharedInstance].currentSessionId = [responseObject objectForKey:KEY_SESSION_ID];
                 [self switchChange:(id)sender];
 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
                 [SVProgressHUD dismiss];
-
-                UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-                if (alert) {
-                    [alert show];
-                }
+                [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
             }];
         } else {
             [SVProgressHUD dismiss];
 
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
+            [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
 
-            if (alert) {
-                [alert show];
-            }
             if (switchControl.on) {
                 switchControl.on = NO;
                 self.siteHasGenerator = NO;

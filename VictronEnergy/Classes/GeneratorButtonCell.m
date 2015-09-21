@@ -2,8 +2,8 @@
 //  GeneratorButtonCell.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 9/4/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 9/4/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "GeneratorButtonCell.h"

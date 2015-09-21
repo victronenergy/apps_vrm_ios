@@ -3,7 +3,7 @@
 //  VictronEnergy
 //
 //  Created by Mandarin on 30/01/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -24,7 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *solarArrowImageView;
 @property (weak, nonatomic) IBOutlet UILabel *solarWattLabel;
 
--(void)setDataWithAttributesInfo:(AttributesInfo *)attributesInfo withSite:(SiteInfo *)siteInfo;
+- (void)setDataWithSite:(SiteInfo *)siteInfo;
 
 @property (weak, nonatomic) IBOutlet UIView *backgroundBorderView;
 

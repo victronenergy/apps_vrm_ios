@@ -2,8 +2,8 @@
 //  ExtenderDetailViewController.h
 //  VictronEnergy
 //
-//  Created by Victron Energy on 4/9/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 4/9/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

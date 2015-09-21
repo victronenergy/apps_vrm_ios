@@ -2,8 +2,8 @@
 //  SiteInfo.m
 //  Victron Energy
 //
-//  Created by Victron Energy on 3/15/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/15/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "SiteInfo.h"
@@ -18,6 +18,7 @@
 #import "M2MSummaryWidgetDcPowerSystem.h"
 #import "M2MSummaryWidgetBatteryState.h"
 #import "M2MSummaryWidgetPvPower.h"
+#import "M2MLoginService.h"
 
 enum WidgetsName {
     WidgetStateOfCharge,
@@ -34,19 +35,6 @@ enum WidgetsName {
 -(id)init{
     self = [super init];
     if (self != nil) {
-        self.name = nil;
-        self.activeAlarms = 0;
-        self.lastUpdated = 0;
-        self.siteID = 0;
-        self.hasGenerator = 0;
-        self.hasIOExtender = 0;
-        self.phone = nil;
-        self.canEditSite = 0;
-        self.instanceNumber = 0;
-        self.siteStatus = 0;
-        self.inAlarmSince = 0;
-        self.siteAttributes = nil;
-        self.siteSummaryWidgets = nil;
         self.isLoadingWidgets = YES;
       }
 
@@ -67,24 +55,23 @@ enum WidgetsName {
 
 -(void)parseFromDictionary:(NSDictionary *)siteDictionary
 {
+    self.name = [Tools validatedString:siteDictionary[KEY_SITE_NAME]];
+    self.phone = [Tools validatedString:siteDictionary[KEY_SITE_PHONE]];
+    self.hasGenerator = [siteDictionary[KEY_SITE_HAS_GENERATOR] boolValue];
+    self.activeAlarms = [siteDictionary[KEY_SITE_ACTIVE_ALARMS] integerValue];
+    self.lastUpdated = [siteDictionary[KEY_SITE_LAST_UPDATE] integerValue];
+    self.siteID = [siteDictionary[KEY_SITE_ID] intValue];
+    self.hasIOExtender = [siteDictionary[KEY_SITE_HAS_IO_EXTENDER] boolValue];
+    self.canEditSite = [siteDictionary[KEY_SITE_CAN_EDIT] boolValue];
+    self.hasDcSystem = [siteDictionary[KEY_SITE_HAS_DC_SYSTEM] boolValue];
+    self.inAlarmSince = [siteDictionary[KEY_SITE_ALARM_STARTED] integerValue];
 
-    self.name =[Tools validatedString:[siteDictionary objectForKey:KEY_SITE_NAME ]];
-    self.phone = [Tools validatedString:[siteDictionary objectForKey:KEY_SITE_PHONE]];
-    self.hasGenerator = [[siteDictionary objectForKey:KEY_SITE_HAS_GENERATOR] boolValue];
-    self.activeAlarms =[[siteDictionary objectForKey:KEY_SITE_ACTIVE_ALARMS]intValue];
-    self.lastUpdated = [[siteDictionary objectForKey:KEY_SITE_LAST_UPDATE]intValue];
-    self.siteID = [[siteDictionary objectForKey:KEY_SITE_ID]intValue];
-    self.hasIOExtender = [[siteDictionary objectForKey:KEY_SITE_HAS_IO_EXTENDER]boolValue];
-    self.canEditSite = [[siteDictionary objectForKey:KEY_SITE_CAN_EDIT]boolValue];
-    self.hasDcSystem = [[siteDictionary objectForKey:KEY_SITE_HAS_DC_SYSTEM]boolValue];
-    self.inAlarmSince = [[siteDictionary objectForKey:KEY_SITE_ALARM_STARTED]integerValue];
-
-    self.instanceNumber = [[siteDictionary objectForKey:kM2MResponseSiteInstanceNumber] integerValue];
+    self.instanceNumber = [siteDictionary[kM2MResponseSiteInstanceNumber] integerValue];
     if (self.instanceNumber == -1) {
         self.instanceNumber = 0;
     }
 
-    self.imageURLS = [siteDictionary objectForKey:kM2MResponseSiteImages];
+    self.imageURLS = siteDictionary[kM2MResponseSiteImages];
 
     [self checkStatusOfSite];
 }
@@ -188,133 +175,5 @@ enum WidgetsName {
         [self.siteSummaryWidgets addObject:emptyWidget];
     }
 }
-
--(void)refreshSiteInfoObject:(void (^)(BOOL succes))completionSucces
-{
-
-    NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-    [postDict setValue:[Data sharedData].sessionId forKey:kM2MWebServiceSessionId];
-    [postDict setValue:kM2MWebServiceVerificationTokenValue forKey:kM2MWebServiceVerificationToken];
-    [postDict setValue:kM2MWebServiceVersionNumber forKey:kM2MWebServiceVersion];
-    [postDict setValue:[NSNumber numberWithInteger:self.siteID] forKey:kM2MWebServiceSiteId];
-
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
-    [manager POST:URL_SERVER_SITES_GET_SITE parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-        NSDictionary *siteDictionairy = [[[responseObject objectForKey:kM2MResponseData] objectForKey:kM2MResponseSites] firstObject];
-
-        [self parseFromDictionary:siteDictionairy];
-
-        completionSucces(YES);
-
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-        if (operation.response.statusCode == RETURN_CODE_SESSION_EXPIRED) {
-            NSMutableDictionary *postDict = [Tools setPostDict];
-
-            [manager POST:URL_SERVER_LOGIN parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-                [SVProgressHUD dismiss];
-
-                [Data sharedData].sessionId = [responseObject objectForKey:KEY_SESSION_ID];
-                [self refreshSiteInfoObject:nil];
-
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                [SVProgressHUD dismiss];
-
-                UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-                if (alert) {
-                    [alert show];
-                }
-            }];
-        } else {
-            [SVProgressHUD dismiss];
-
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-            if (alert) {
-                [alert show];
-            }
-            completionSucces(NO);
-        }
-    }];
-}
-
-@end
-
-@implementation Sites
-
-+(NSArray *)getSites
-{
-    __block NSArray *sitesArray = nil;
-
-    NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-    [postDict setValue:[Data sharedData].sessionId forKey:kM2MWebServiceSessionId];
-    [postDict setValue:kM2MWebServiceVerificationTokenValue forKey:kM2MWebServiceVerificationToken];
-    [postDict setValue:kM2MWebServiceVersionNumber forKey:kM2MWebServiceVersion];
-
-    [SVProgressHUD show];
-
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
-    [manager POST:URL_SERVER_SITES_GET parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-        [SVProgressHUD dismiss];
-
-        NSArray *sitesDictionaryArray = [[NSArray alloc]initWithArray:[[responseObject objectForKey:kM2MResponseData] objectForKey:kM2MResponseSites]];
-
-        NSMutableArray *tempSiteArray = [[NSMutableArray alloc]init];
-        for (id siteDictionary in sitesDictionaryArray) {
-            SiteInfo *siteInfo =[[SiteInfo alloc]initWithDictionary:siteDictionary];
-
-            [tempSiteArray addObject:siteInfo];
-        }
-        sitesArray = [[NSArray alloc]initWithArray:tempSiteArray];
-        NSDictionary *tempDict = [NSDictionary dictionaryWithObject:[sitesArray copy] forKey:KEY_SITES_DICT];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SITE_LIST object:nil userInfo:tempDict];
-
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-        if (operation.response.statusCode == RETURN_CODE_SESSION_EXPIRED) {
-            NSMutableDictionary *postDict = [Tools setPostDict];
-
-            [manager POST:URL_SERVER_LOGIN parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-                [SVProgressHUD dismiss];
-
-                [Data sharedData].sessionId=[responseObject objectForKey:KEY_SESSION_ID];
-                [self getSites];
-
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                [SVProgressHUD dismiss];
-
-                UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-                if (alert) {
-                    [alert show];
-                }
-            }];
-        } else {
-            [SVProgressHUD dismiss];
-
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-            if (alert) {
-                [alert show];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SITE_LIST object:nil userInfo:nil];
-        }
-
-    }];
-    return sitesArray;
-}
-
-
 
 @end

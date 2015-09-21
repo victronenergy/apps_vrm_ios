@@ -2,8 +2,8 @@
 //  SiteDetailViewController.h
 //  VictronEnergy
 //
-//  Created by Victron Energy on 3/27/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/27/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -16,20 +16,18 @@
     BOOL _reloading;
 }
 
-@property (weak, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
+@property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
 @property (strong, nonatomic) SiteInfo *selectedSite;
 @property (nonatomic) Scenario currentOverview;
 @property (nonatomic, assign) BOOL hasSetGeneratorSettings;
 
 @property (strong, nonatomic) NSDictionary *siteSettingsListResults;
 @property (strong, nonatomic) NSMutableArray *extendersList;
-@property (strong, nonatomic) AttributesInfo *attributesInfo;
 @property (strong, nonatomic) NSMutableArray *tempExtenderList;
 @property (strong, nonatomic) NSMutableArray *outputList;
 @property (weak, nonatomic) NSString *smsOutput;
 @property (weak, nonatomic) NSString *changedDCSystem;
 
-@property (assign, nonatomic) BOOL attributesLoaded;
 @property (assign, nonatomic) BOOL siteSettingsAlreadyInList;
 @property (assign, nonatomic) BOOL startGenerator;
 @property (assign, nonatomic) NSInteger selectedOutput;

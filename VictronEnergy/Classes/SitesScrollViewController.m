@@ -2,8 +2,8 @@
 //  SitesScrollViewController.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 4/24/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 4/24/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 typedef enum ScrollDirection {
@@ -22,6 +22,7 @@ typedef enum ScrollDirection {
 #import "Data.h"
 #import "KeychainItemWrapper.h"
 #import "SVWebViewController.h"
+#import "M2MLoginService.h"
 
 @interface SitesScrollViewController ()
 
@@ -80,6 +81,14 @@ typedef enum ScrollDirection {
     [self resizeScrollView];
 }
 
+- (void)setSitesList:(NSArray *)sitesList
+{
+    _sitesList = sitesList;
+    if ([sitesList count] > 0) {
+        [self updateDetailViews];
+    }
+}
+
 - (void)resizeScrollView
 {
     NSInteger numberOfViews = [self.sitesList count];
@@ -110,7 +119,18 @@ typedef enum ScrollDirection {
 
     // Scroll to the selected site
     [self.scrollView setContentOffset:CGPointMake(self.scrollView.frame.size.width * self.siteIndex, 0) animated:NO];
+}
 
+-(void) updateDetailViews {
+    NSUInteger index = 0;
+    for (SiteDetailViewController *vc in self.viewControllerArray) {
+        if (![vc isEqual:[NSNull null]]) {
+            if (index < [self.sitesList count]) {
+                vc.selectedSite = self.sitesList[index];
+            }
+        }
+        index++;
+    }
 }
 
 -(void)buildScrollViewContent {
@@ -199,18 +219,25 @@ typedef enum ScrollDirection {
 {
     [super viewWillAppear:animated];
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    M2MLoginService *loginService = [M2MLoginService sharedInstance];
+
+    //TODO: This is needed if the left side of the splitview is hidden
+    //if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         // Note that in portrait mode it is necessary to present the login screen this way, because
         // the master view's viewDidAppear: will not be called until its popover is displayed.
-        if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) && ![Data sharedData].userIsLoggedIn) {
-            [self performSegueWithIdentifier:@"iPadLoginPortraitSegue" sender:nil];
-        }
-    }
+        //if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) && !loginService.loggedIn) {
+            //[self performSegueWithIdentifier:@"iPadLoginPortraitSegue" sender:nil];
+        //}
+    //}
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) && [Data sharedData].userIsLoggedIn && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+    [super viewDidAppear:animated];
+
+    M2MLoginService *loginService = [M2MLoginService sharedInstance];
+
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) && loginService.loggedIn && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         // Reload the scrollview if we navigate back from e.g. Historic Data after we've just rotated the device.
         [self reloadScrollview];
     }
@@ -374,7 +401,8 @@ typedef enum ScrollDirection {
    shouldHideViewController:(UIViewController *)vc
               inOrientation:(UIInterfaceOrientation)orientation
 {
-    return UIInterfaceOrientationIsPortrait(orientation);
+    //TODO: Test
+    return NO;
 }
 
 /** iPad - Going to portrait mode. */

@@ -2,8 +2,8 @@
 //  SiteDetail2Cell.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 3/27/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/27/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "BMVCell.h"
@@ -29,17 +29,17 @@
     self.contentView.backgroundColor = COLOR_BACKGROUND;
 }
 
--(void)setDataWithAttributesInfo:(AttributesInfo *)attributesInfo withSite:(SiteInfo *)siteInfo
+- (void)setDataWithSite:(SiteInfo *)siteInfo
 {
     // Set the values
-    self.voltageLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryVoltage formattedAs:VOLT hideIfUnavailable:FALSE];
-    self.timeToGoLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryTimeToGo formattedAs:TIME hideIfUnavailable:YES];
-    self.consumedLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryConsumedAmphours formattedAs:AMPHOUR hideIfUnavailable:FALSE];
-    self.dcSystemValueLabel.text = [attributesInfo getFormattedValueForCode:kAttributeDCSystem formattedAs:WATTS hideIfUnavailable:FALSE];
-    self.socLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryStateOfCharge formattedAs:PERCENTAGE hideIfUnavailable:YES];
+    self.voltageLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryVoltage formattedAs:VOLT hideIfUnavailable:FALSE];
+    self.timeToGoLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryTimeToGo formattedAs:TIME hideIfUnavailable:YES];
+    self.consumedLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryConsumedAmphours formattedAs:AMPHOUR hideIfUnavailable:FALSE];
+    self.dcSystemValueLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeDCSystem formattedAs:WATTS hideIfUnavailable:FALSE];
+    self.socLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryStateOfCharge formattedAs:PERCENTAGE hideIfUnavailable:YES];
 
     // Set the arrow directions
-    self.dcSystemArrowImage.image = [Tools arrowImageForPositiveRight:[attributesInfo getValueForCode:kAttributeDCSystem ]];
+    self.dcSystemArrowImage.image = [Tools arrowImageForPositiveRight:[siteInfo.siteAttributes getValueForCode:kAttributeDCSystem ]];
 
     // Show hide certain parts of the overview
     if(siteInfo.hasDcSystem == 0) {

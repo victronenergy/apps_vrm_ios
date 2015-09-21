@@ -2,8 +2,8 @@
 //  LoginViewController.m
 //  Victron Energy
 //
-//  Created by Victron Energy on 3/4/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/4/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "LoginViewController.h"
@@ -13,6 +13,8 @@
 #import "KeychainItemWrapper.h"
 #import "SVWebViewController.h"
 #import "Tools.h"
+#import "M2MLoginService.h"
+#import "M2MCredentials.h"
 
 @interface LoginViewController ()
 
@@ -75,75 +77,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEY_CHAIN_IDENTIFIER accessGroup:nil];
-    NSString *password = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
-    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
 
-    if ([password length] != 0 && [username length] != 0) {
-
-        NSDate *startLogin = [NSDate date];
-
-        [self.view setUserInteractionEnabled:NO];
-
-        self.emailTextField.text = username;
-        self.passwordTextField.text = password;
-
-        NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-        [postDict setValue:username forKey:kM2MWebServiceUsername];
-        [postDict setValue:password forKey:kM2MWebServicePassword];
-        [postDict setValue:kM2MWebServiceVerificationTokenValue forKey:kM2MWebServiceVerificationToken];
-        [postDict setValue:kM2MWebServiceVersionNumber forKey:kM2MWebServiceVersion];
-
-        [SVProgressHUD show];
-
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        manager.responseSerializer = [AFJSONResponseSerializer serializer];
-        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
-        [manager POST:URL_SERVER_LOGIN parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-            [SVProgressHUD dismiss];
-
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-            if (alert) {
-                [alert show];
-            } else {
-
-                NSDate *finishLogin = [NSDate date];
-                NSTimeInterval executionTime = [finishLogin timeIntervalSinceDate:startLogin];
-                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-
-                [tracker send:[[GAIDictionaryBuilder createTimingWithCategory:GA_EVENT_CATEGORY_WEBSERVICE
-                                                                    interval:[NSNumber numberWithDouble:executionTime]
-                                                                        name:GA_WITH_NAME_LOGIN
-                                                                       label:@"splash"] build]];
-
-                [Data sharedData].sessionId= [[[responseObject objectForKey:kM2MResponseData] objectForKey:kM2MResponseUser] objectForKey:kM2MResponseSessionId];
-                [Data sharedData].username = self.emailTextField.text;
-                [Data sharedData].password = self.passwordTextField.text;
-
-                KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEY_CHAIN_IDENTIFIER accessGroup:nil];
-                [keychainItem setObject: self.passwordTextField.text forKey:(__bridge id)(kSecValueData)];
-                [keychainItem setObject: self.emailTextField.text forKey:(__bridge id)(kSecAttrAccount)];
-
-                self.emailTextField.text = nil;
-                self.passwordTextField.text = nil;
-
-                [self.view setUserInteractionEnabled:YES];
-
-                [Data sharedData].userIsLoggedIn = YES;
-                [self dismissLoginView];
-            }
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [SVProgressHUD dismiss];
-
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-            if (alert) {
-                [alert show];
-            }
-            [self.view setUserInteractionEnabled:YES];
-        }];
-    }
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_full.png"]];
@@ -182,66 +116,7 @@
                                                            label:@"demo_button"
                                                            value:nil] build]];
 
-
-
-    NSDate *startLogin = [NSDate date];
-
-    NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-    [postDict setValue:LOGIN_DEMO_EMAIL forKey:kM2MWebServiceUsername];
-    [postDict setValue:LOGIN_DEMO_PASSWORD forKey:kM2MWebServicePassword];
-    [postDict setValue:kM2MWebServiceVerificationTokenValue forKey:kM2MWebServiceVerificationToken];
-    [postDict setValue:kM2MWebServiceVersionNumber forKey:kM2MWebServiceVersion];
-
-    [SVProgressHUD show];
-
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
-    [manager POST:URL_SERVER_LOGIN parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-        [SVProgressHUD dismiss];
-
-        UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-        if (alert) {
-            [alert show];
-        } else {
-            NSDate *finishLogin = [NSDate date];
-            NSTimeInterval executionTime = [finishLogin timeIntervalSinceDate:startLogin];
-            NSNumber *executionTimeNumber = [NSNumber numberWithDouble:executionTime];
-
-            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-
-            [tracker send:[[GAIDictionaryBuilder createTimingWithCategory:GA_EVENT_CATEGORY_WEBSERVICE
-                                                                 interval:executionTimeNumber
-                                                                     name:GA_WITH_NAME_LOGIN
-                                                                    label:@"login"] build]];
-
-            [Data sharedData].sessionId= [[[responseObject objectForKey:kM2MResponseData] objectForKey:kM2MResponseUser] objectForKey:kM2MResponseSessionId];
-            [Data sharedData].username = LOGIN_DEMO_EMAIL;
-            [Data sharedData].password = LOGIN_DEMO_PASSWORD;
-            [Data sharedData].userIsDemoUser = YES;
-
-            KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEY_CHAIN_IDENTIFIER accessGroup:nil];
-            [keychainItem setObject: LOGIN_DEMO forKey:(__bridge id)(kSecAttrAccount)];
-
-            self.emailTextField.text = nil;
-            self.passwordTextField.text = nil;
-
-            [Data sharedData].userIsLoggedIn = YES;
-
-            [self dismissLoginView];
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-        [SVProgressHUD dismiss];
-
-        UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-        if (alert) {
-            [alert show];
-        }
-        [self.view setUserInteractionEnabled:YES];
-    }];
+    [self loginWithUsername:LOGIN_DEMO_EMAIL password:LOGIN_DEMO_PASSWORD];
 
 }
 
@@ -253,7 +128,13 @@
                                                           action:GA_WITH_ACTION_BUTTON_PRESS
                                                            label:@"login_button"
                                                            value:nil] build]];
-    if (![Tools validateEmail:self.emailTextField.text]) {
+
+    [self loginWithUsername:self.emailTextField.text password:self.passwordTextField.text];
+}
+
+- (void)loginWithUsername:(NSString *)username password:(NSString *)password
+{
+    if (![Tools validateEmail:username]) {
 
         UIAlertView *alert = [[UIAlertView alloc]
                               initWithTitle:NSLocalizedString(@"error_title", @"error_title")
@@ -262,7 +143,7 @@
                               cancelButtonTitle:NSLocalizedString(@"error_message_cancel_button", @"error_message_cancel_button")
                               otherButtonTitles:nil];
         [alert show];
-    }else if ([self.passwordTextField.text isEqualToString:@""]){
+    }else if ([password isEqualToString:@""]){
         UIAlertView *alert = [[UIAlertView alloc]
                               initWithTitle:NSLocalizedString(@"error_title", @"error_title")
                               message:NSLocalizedString(@"no_password_message", @"no_password_message")
@@ -271,64 +152,27 @@
                               otherButtonTitles:nil];
         [alert show];
     }else{
-        NSDate *startLogin = [NSDate date];
 
-        NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-        [postDict setValue:self.emailTextField.text forKey:kM2MWebServiceUsername];
-        [postDict setValue:self.passwordTextField.text forKey:kM2MWebServicePassword];
-        [postDict setValue:kM2MWebServiceVerificationTokenValue forKey:kM2MWebServiceVerificationToken];
-        [postDict setValue:kM2MWebServiceVersionNumber forKey:kM2MWebServiceVersion];
+        M2MLoginService *loginService = [M2MLoginService sharedInstance];
+        M2MCredentials *credentials = [M2MCredentials new];
+        credentials.username = username;
+        credentials.password = password;
 
         [SVProgressHUD show];
-
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        manager.responseSerializer = [AFJSONResponseSerializer serializer];
-        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
-        [manager POST:URL_SERVER_LOGIN parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
+        [loginService loginWithCredentials:credentials success:^(NSInteger statusCode){
             [SVProgressHUD dismiss];
-
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-            if (alert) {
-                [alert show];
-            } else {
-                NSDate *finishLogin = [NSDate date];
-                NSTimeInterval executionTime = [finishLogin timeIntervalSinceDate:startLogin];
-                NSNumber *executionTimeNumber = [NSNumber numberWithDouble:executionTime];
-
-                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-
-                [tracker send:[[GAIDictionaryBuilder createTimingWithCategory:GA_EVENT_CATEGORY_WEBSERVICE
-                                                                    interval:executionTimeNumber
-                                                                        name:GA_WITH_NAME_LOGIN
-                                                                       label:@"login"] build]];
-
-
-                [Data sharedData].sessionId= [[[responseObject objectForKey:kM2MResponseData] objectForKey:kM2MResponseUser] objectForKey:kM2MResponseSessionId];
-
-                KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEY_CHAIN_IDENTIFIER accessGroup:nil];
-                [keychainItem setObject: self.passwordTextField.text forKey:(__bridge id)(kSecValueData)];
-                [keychainItem setObject: self.emailTextField.text forKey:(__bridge id)(kSecAttrAccount)];
-
+            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
+            if (!alert) {
                 self.emailTextField.text = nil;
                 self.passwordTextField.text = nil;
-
-                [Data sharedData].userIsLoggedIn = YES;
-
                 [self dismissLoginView];
             }
-
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        } failure:^(NSInteger statusCode){
             [SVProgressHUD dismiss];
 
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-            if (alert) {
-                [alert show];
-            }
+            [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
             [self.view setUserInteractionEnabled:YES];
         }];
-
     }
 }
 

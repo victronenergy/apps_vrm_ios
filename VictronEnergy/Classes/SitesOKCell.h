@@ -3,15 +3,17 @@
 //  VictronEnergy
 //
 //  Created by Mandarin on 21/02/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "SiteInfo.h"
 
-@interface SitesOKCell : UITableViewCell <UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate>
+@interface SitesOKCell : UITableViewCell <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UILabel *nameLabel;
+
+@property (nonatomic, weak) IBOutlet UILabel *lastUpdateLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *backgroundViewForFrame;
 

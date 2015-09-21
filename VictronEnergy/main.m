@@ -2,8 +2,8 @@
 //  main.m
 //  Victron Energy
 //
-//  Created by Victron Energy on 3/5/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/5/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

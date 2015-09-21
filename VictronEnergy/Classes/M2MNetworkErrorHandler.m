@@ -2,8 +2,8 @@
 //  M2MNetworkErrorHandler.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 3/5/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Created by Lime on 3/5/14.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "M2MNetworkErrorHandler.h"
@@ -51,6 +51,7 @@ NSString *const kM2MOkButtonTitle = @"Ok";
     }
 
     UIAlertView *theAlert = [[UIAlertView alloc] initWithTitle:errorTitle message:errorMessage delegate:self cancelButtonTitle:nil otherButtonTitles:kM2MOkButtonTitle, nil];
+    [theAlert show];
 
     return theAlert;
 }

@@ -2,11 +2,12 @@
 //  MultiCell.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 3/28/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/28/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "MultiCell.h"
+#import "SingleAttributeInfo.h"
 
 @implementation MultiCell
 
@@ -33,60 +34,60 @@
     self.contentView.backgroundColor = COLOR_BACKGROUND;
 }
 
--(void)setDataWithAttributesInfo:(AttributesInfo *)attributesInfo withSite:(SiteInfo *)siteInfo
+- (void)setDataWithSite:(SiteInfo *)siteInfo
 {
     // Set the arrow directions
-    NSArray *acInAttributes = [NSArray arrayWithObjects:kAttributeGensetL1, kAttributeGridL1, kAttributeGensetL2, kAttributeGridL2, kAttributeGridL3, kAttributeGensetL3, nil];
-    self.acInArrowImage.image = [Tools arrowImageForPositiveRight:[attributesInfo getValueForCodes:acInAttributes]];
-    NSArray *acSystemAttributes = [NSArray arrayWithObjects:kAttributeAC_ConsumptionL1, kAttributeAC_ConsumptionL2, kAttributeAC_ConsumptionL3, nil];
-    self.acOutArrowImage.image = [Tools arrowImageForPositiveRight:[attributesInfo getValueForCodes:acSystemAttributes]];
-    self.currentArrowImage.image = [Tools arrowImageForPositiveDown:[attributesInfo getValueForCode:kAttributeVEBusChargeCurrent]];
+    NSArray *acInAttributes = @[kAttributeGensetL1, kAttributeGridL1, kAttributeGensetL2, kAttributeGridL2, kAttributeGridL3, kAttributeGensetL3];
+    self.acInArrowImage.image = [Tools arrowImageForPositiveRight:[siteInfo.siteAttributes getValueForCodes:acInAttributes]];
+    NSArray *acSystemAttributes = @[kAttributeAC_ConsumptionL1, kAttributeAC_ConsumptionL2, kAttributeAC_ConsumptionL3];
+    self.acOutArrowImage.image = [Tools arrowImageForPositiveRight:[siteInfo.siteAttributes getValueForCodes:acSystemAttributes]];
+    self.currentArrowImage.image = [Tools arrowImageForPositiveDown:[siteInfo.siteAttributes getValueForCode:kAttributeVEBusChargeCurrent]];
 
     // Check if AC In is genset or grid
     NSString *acInTitleName = @"";
-    if([attributesInfo isAttributeSet:kAttributeGensetL1]) {
-        acInTitleName = NSLocalizedString(@"ac_in_genset", @"ac_in_genset");
+    if([siteInfo.siteAttributes isAttributeSet:kAttributeGensetL1]) {
+            acInTitleName = NSLocalizedString(@"ac_in_genset", @"ac_in_genset");
     } else {
         acInTitleName = NSLocalizedString(@"ac_in_grid", @"ac_in_grid");
     }
 
     // Check wich label to use and set the values
-    if ([attributesInfo isAttributeSet:kAttributeGensetL3] || [attributesInfo isAttributeSet:kAttributeGridL3]) {
+    if ([siteInfo.siteAttributes isAttributeSet:kAttributeGensetL3] || [siteInfo.siteAttributes isAttributeSet:kAttributeGridL3]) {
         self.acInNameLabel.hidden = NO;
         self.acInNameLabel.text = acInTitleName;
-        self.acInPhase1Label.text = [attributesInfo getFormattedValueForCodes:[NSArray arrayWithObjects:kAttributeGensetL1, kAttributeGridL1, nil] formattedAs:WATTS hideIfUnavailable:NO];
-        self.acInPhase2Label.text = [attributesInfo getFormattedValueForCodes:[NSArray arrayWithObjects:kAttributeGensetL2, kAttributeGridL2, nil] formattedAs:WATTS hideIfUnavailable:NO];
-        self.acInPhase3Label.text = [attributesInfo getFormattedValueForCodes:[NSArray arrayWithObjects:kAttributeGensetL3, kAttributeGridL3, nil] formattedAs:WATTS hideIfUnavailable:NO];
-    } else if ([attributesInfo isAttributeSet:kAttributeGensetL2] || [attributesInfo isAttributeSet:kAttributeGridL2]) {
+        self.acInPhase1Label.text = [siteInfo.siteAttributes getFormattedValueForCodes:@[kAttributeGensetL1, kAttributeGridL1] formattedAs:WATTS hideIfUnavailable:NO];
+        self.acInPhase2Label.text = [siteInfo.siteAttributes getFormattedValueForCodes:@[kAttributeGensetL2, kAttributeGridL2] formattedAs:WATTS hideIfUnavailable:NO];
+        self.acInPhase3Label.text = [siteInfo.siteAttributes getFormattedValueForCodes:@[kAttributeGensetL3, kAttributeGridL3] formattedAs:WATTS hideIfUnavailable:NO];
+    } else if ([siteInfo.siteAttributes isAttributeSet:kAttributeGensetL2] || [siteInfo.siteAttributes isAttributeSet:kAttributeGridL2]) {
         [self changeStyleACInNameLabelWithName:acInTitleName];
-        self.acInPhase2Label.text = [attributesInfo getFormattedValueForCodes:[NSArray arrayWithObjects:kAttributeGensetL1, kAttributeGridL1, nil] formattedAs:WATTS hideIfUnavailable:NO];
-        self.acInPhase3Label.text = [attributesInfo getFormattedValueForCodes:[NSArray arrayWithObjects:kAttributeGensetL2, kAttributeGridL2, nil] formattedAs:WATTS hideIfUnavailable:NO];
+        self.acInPhase2Label.text = [siteInfo.siteAttributes getFormattedValueForCodes:@[kAttributeGensetL1, kAttributeGridL1] formattedAs:WATTS hideIfUnavailable:NO];
+        self.acInPhase3Label.text = [siteInfo.siteAttributes getFormattedValueForCodes:@[kAttributeGensetL2, kAttributeGridL2] formattedAs:WATTS hideIfUnavailable:NO];
     } else {
         [self changeStyleACInNameLabelWithName:acInTitleName];
-        self.acInPhase2Label.text = [attributesInfo getFormattedValueForCodes:[NSArray arrayWithObjects:kAttributeGensetL1, kAttributeGridL1, nil] formattedAs:WATTS hideIfUnavailable:NO];
+        self.acInPhase2Label.text = [siteInfo.siteAttributes getFormattedValueForCodes:@[kAttributeGensetL1, kAttributeGridL1] formattedAs:WATTS hideIfUnavailable:NO];
         self.acInPhase3Label.hidden = YES;
     }
 
-    if ([attributesInfo isAttributeSet:kAttributeAC_ConsumptionL3]) {
+    if ([siteInfo.siteAttributes isAttributeSet:kAttributeAC_ConsumptionL3]) {
         self.acOutNameLabel.hidden = NO;
-        self.acSystemPhase1Label.text = [attributesInfo getFormattedValueForCode:kAttributeAC_ConsumptionL1 formattedAs:WATTS hideIfUnavailable:NO];
-        self.acSystemPhase2Label.text = [attributesInfo getFormattedValueForCode:kAttributeAC_ConsumptionL2 formattedAs:WATTS hideIfUnavailable:NO];
-        self.acSystemPhase3Label.text = [attributesInfo getFormattedValueForCode:kAttributeAC_ConsumptionL3 formattedAs:WATTS hideIfUnavailable:NO];
-    } else if ([attributesInfo isAttributeSet:kAttributeAC_ConsumptionL2]) {
+        self.acSystemPhase1Label.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeAC_ConsumptionL1 formattedAs:WATTS hideIfUnavailable:NO];
+        self.acSystemPhase2Label.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeAC_ConsumptionL2 formattedAs:WATTS hideIfUnavailable:NO];
+        self.acSystemPhase3Label.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeAC_ConsumptionL3 formattedAs:WATTS hideIfUnavailable:NO];
+    } else if ([siteInfo.siteAttributes isAttributeSet:kAttributeAC_ConsumptionL2]) {
         [self changeStyleACLoadNameLabel];
-        self.acSystemPhase2Label.text = [attributesInfo getFormattedValueForCode:kAttributeAC_ConsumptionL1 formattedAs:WATTS hideIfUnavailable:NO];
-        self.acSystemPhase3Label.text = [attributesInfo getFormattedValueForCode:kAttributeAC_ConsumptionL2 formattedAs:WATTS hideIfUnavailable:NO];
+        self.acSystemPhase2Label.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeAC_ConsumptionL1 formattedAs:WATTS hideIfUnavailable:NO];
+        self.acSystemPhase3Label.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeAC_ConsumptionL2 formattedAs:WATTS hideIfUnavailable:NO];
     } else {
         [self changeStyleACLoadNameLabel];
-        self.acSystemPhase2Label.text = [attributesInfo getFormattedValueForCode:kAttributeAC_ConsumptionL1 formattedAs:WATTS hideIfUnavailable:NO];
+        self.acSystemPhase2Label.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeAC_ConsumptionL1 formattedAs:WATTS hideIfUnavailable:NO];
         self.acSystemPhase3Label.hidden = YES;
     }
 
-    self.batteryVoltageLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryVoltage formattedAs:VOLT hideIfUnavailable:NO];
-    self.batterySocLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryStateOfCharge formattedAs:PERCENTAGE hideIfUnavailable:YES];
-    self.dcCurrentLabel.text = [attributesInfo getFormattedValueForCode:kAttributeVEBusChargeCurrent formattedAs:AMPS hideIfUnavailable:NO];
+    self.batteryVoltageLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryVoltage formattedAs:VOLT hideIfUnavailable:NO];
+    self.batterySocLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryStateOfCharge formattedAs:PERCENTAGE hideIfUnavailable:YES];
+    self.dcCurrentLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeVEBusChargeCurrent formattedAs:AMPS hideIfUnavailable:NO];
 
-    SingleAttributeInfo *attribute = [attributesInfo getAttributeByCode:kAttributeVEBusState];
+    SingleAttributeInfo *attribute = [siteInfo.siteAttributes getAttributeByCode:kAttributeVEBusState];
 
     // Hide/Unhide certain parts of the overview
     switch(attribute.attributeValueEnum) {

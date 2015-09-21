@@ -13,11 +13,8 @@
 @interface Tools : NSObject
 
 +(BOOL)validateEmail:(NSString *)candidate;
-+(BOOL)validateName:(NSString *)candidate;
 
-+(NSString *)returnDateFromUnixTimeStamp:(NSNumber *)timestamp;
 +(NSString *)convertToLastUpdateDate:(NSDate *)date;
-+ (NSString *)stringDateFromCurrentTime:(NSTimeInterval)unixDateToConvert;
 +(NSString *)validatedString:(NSString *)inputStr;
 +(NSInteger)validatedInteger:(NSString *)inputStr;
 +(NSMutableDictionary *)setPostDict;

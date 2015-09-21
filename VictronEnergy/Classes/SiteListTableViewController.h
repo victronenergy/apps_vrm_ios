@@ -2,8 +2,8 @@
 //  SiteListTable.h
 //  Victron Energy
 //
-//  Created by Victron Energy on 3/12/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/12/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -45,6 +45,10 @@
 
 @property (weak, nonatomic) IBOutlet UINavigationItem *logoutButton;
 @property (weak, nonatomic) IBOutlet UISearchBar *sitesSearchBar;
+
+@property(nonatomic, strong) NSDate *lastReloadDate;
+
+@property(nonatomic, strong) SitesScrollViewController *scrollViewController;
 
 - (void)reloadTableViewDataSource;
 - (void)doneLoadingTableViewData;

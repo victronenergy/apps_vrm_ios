@@ -1,0 +1,25 @@
+# Exclude the build directory
+build/
+
+# Exclude temp nibs and swap files
+*~.nib
+*.swp
+*.bak
+
+# Exclude OS X folder attributes
+.DS_Store
+
+# Exclude user-specific XCode 3 and 4 files
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+project.xcworkspace/
+*.xcuserdatad/
+*.xccheckout
+Pods/
+*.xcbkptlist
+.idea/
+
+# source: http://www.codedifferent.com/2011/05/01/coding-gitignore-for-xcode-4/

@@ -2,8 +2,8 @@
 //  SiteInfo.h
 //  Victron Energy
 //
-//  Created by Victron Energy on 3/15/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/15/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -49,11 +49,5 @@
 -(void)setSummaryWidgetsforAttributes:(AttributesInfo *)attributes;
 
 -(void)refreshSiteInfoObject:(void (^)(BOOL succes))completionSucces;
-
-@end
-
-@interface Sites : NSObject
-
-+(NSArray *)getSites;
 
 @end

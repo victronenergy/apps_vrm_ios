@@ -2,13 +2,16 @@
 //  M2MImagesCollectionViewController.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 04/06/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Created by Lime on 04/06/14.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "M2MImagesCollectionViewController.h"
 #import "M2MImagesCollectionViewDataSource.h"
 #import "Data.h"
+#import "M2MLoginService.h"
+#import "M2MSiteService.h"
+#import "M2MSiteInfoService.h"
 
 @interface M2MImagesCollectionViewController ()
 
@@ -83,7 +86,7 @@
 -(void)deleteImage{
 
     NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-    [postDict setValue:[Data sharedData].sessionId forKey:kM2MWebServiceSessionId];
+    [postDict setValue:[M2MLoginService sharedInstance].currentSessionId forKey:kM2MWebServiceSessionId];
     [postDict setValue:kM2MWebServiceVerificationTokenValue forKey:kM2MWebServiceVerificationToken];
     [postDict setValue:kM2MWebServiceVersionNumber forKey:kM2MWebServiceVersion];
     [postDict setValue:[NSNumber numberWithInteger:self.selectedSite.siteID] forKey:kM2MWebServiceSiteId];
@@ -95,32 +98,40 @@
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
 
+    __weak typeof(self)weakSelf = self;
     [manager POST:URL_SERVER_IMAGE_DELETE parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [SVProgressHUD dismiss];
-        [self.selectedSite refreshSiteInfoObject:^(BOOL succes){
-            if (succes){
-
-                [self.collectionView reloadData];
-                [self.collectionView layoutIfNeeded];
-
-                if (![self.collectionViewDataSource.selectedSite.imageURLS count]) {
-                    [self removeViewControllerAndChangeSettings];
-                } else {
-                    self.currentIndex = self.collectionView.contentOffset.x / self.collectionView.frame.size.width;
-                    [self updateTitleText];
-                }
-            }
-        }];
-
+        [weakSelf reloadSite];
+        if(weakSelf.onImageDelete){
+            weakSelf.onImageDelete();
+        }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 
         [SVProgressHUD dismiss];
 
-        UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
+        [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
+    }];
+}
 
-        if (alert) {
-            [alert show];
+-(void)reloadSite
+{
+    __weak typeof(self)weakSelf = self;
+
+    [[M2MSiteInfoService new] getSiteWithID:self.selectedSite.siteID success:^(SiteInfo *site) {
+        weakSelf.selectedSite = site;
+        weakSelf.collectionViewDataSource.selectedSite = site;
+        [weakSelf.collectionView reloadData];
+        [weakSelf.collectionView layoutIfNeeded];
+
+        if (![weakSelf.collectionViewDataSource.selectedSite.imageURLS count]) {
+            [weakSelf removeViewControllerAndChangeSettings];
+        } else {
+            weakSelf.currentIndex = self.collectionView.contentOffset.x / self.collectionView.frame.size.width;
+            [weakSelf updateTitleText];
         }
+
+    } failure:^(NSInteger statusCode) {
+        [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
     }];
 }
 

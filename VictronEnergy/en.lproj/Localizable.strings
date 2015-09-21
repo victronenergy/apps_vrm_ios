@@ -2,8 +2,8 @@
   Localizable.strings
   VictronEnergy
 
-  Created by Victron Energy on 3/21/13.
-  Copyright (c) 2013 Victron Energy. All rights reserved.
+  Created by Thijs on 3/21/13.
+  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 */
 
 "forgot_password_button" = "Forgot password?";
@@ -13,6 +13,7 @@
 "alarms_label" = "%i Alarms";
 "Last update label" = "Not sending data since: %@";
 "in_alarm_since_label" = "In alarm since: %@";
+"in_alarm" = "In alarm.";
 "log_out_button" = "Do you want to log out - %@?";
 "open_settings_website_button" = "Open VRM Portal";
 "open_site_in_portal_website_button" = "Open site in VRM Portal";
@@ -52,9 +53,9 @@
 
 "widget_header_grid" = "GRID";
 "widget_header_genset" = "GENSET";
-"widget_header_ac_load" = "AC LOAD";
+"widget_header_ac_load" = "AC CONSUMPTION";
 "widget_header_battery_state" = "BATTERY STATE";
-"widget_header_dc_power_system" = "DC POWER SYSTEM";
+"widget_header_dc_power_system" = "DC SYSTEM";
 "widget_header_pv_power" = "PV POWER";
 "widget_header_battery_soc" = "BATTERY SOC";
 
@@ -68,7 +69,7 @@
 "input_title" = "INPUT";
 "temperature_title" =  "TEMPERATURE";
 
-"ac_load_title" = "AC Load";
+"ac_load_title" = "AC Consumption";
 
 "ac_in_grid" = "Grid";
 "ac_in_genset" = "Genset";
@@ -170,3 +171,15 @@
 "about_text_4" = "\nConfigure to which output your genset is connected, and let the app generate the sms code which will start and stop the genset.";
 
 "about_text_5" = "\n\nThis app requires your system to be connected to the internet through a Victron Global Remote, Victron Ethernet Remote or Color Control GX.";
+
+"last_update_label" = "Last update: ";
+"timeago_never" = "Never";
+"timeago_a_moment_ago" = "A moment ago";
+"timeago_minutes_ago" = "minutes ago";
+"timeago_minute_ago" = "minute ago";
+"timeago_hours_ago" = "hours ago";
+"timeago_hour_ago" = "hour ago";
+"timeago_day_ago" = "day ago";
+"timeago_days_ago" = "days ago";
+"timeago_month_ago" = "month ago";
+"timeago_months_ago" = "months ago";

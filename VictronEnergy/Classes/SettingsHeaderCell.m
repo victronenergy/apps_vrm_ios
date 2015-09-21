@@ -2,8 +2,8 @@
 //  SettingsHeaderCell.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 16/04/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Created by Lime on 16/04/14.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "SettingsHeaderCell.h"

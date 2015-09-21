@@ -3,7 +3,7 @@
 //  VictronEnergy
 //
 //  Created by Mandarin on 23/01/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -18,6 +18,9 @@
 #define UIColorFromHEXValue(hexValue) [UIColor colorWithRed:((float)((hexValue & 0xFF0000) >> 16))/255.0 green:((float)((hexValue & 0xFF00) >> 8))/255.0 blue:((float)(hexValue & 0xFF))/255.0 alpha:1.0]
 
 #define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
+
+//Screen dimensions
+#define SCREEN_WIDTH            [[UIScreen mainScreen] bounds].size.width
 
 //New Colors
 #define COLOR_WHITE                                    UIColorFromHEXValue(0xFFFFFF)
@@ -89,14 +92,17 @@
 #define LABEL_ABOUT_TEXT_HEADER_FONT                   [UIFont fontWithName:@"MuseoSans-500" size:16]
 #define LABEL_ABOUT_TEXT_HEADER_COLOR                  COLOR_DARK_GREY
 
-#define LABEL_ABOUT_TEXT_FONT                          [UIFont fontWithName:@"MuseoSans-300" size:14]
+#define LABEL_ABOUT_TEXT_FONT                          [UIFont fontWithName:@"MuseoSans-300" size:13]
 #define LABEL_ABOUT_TEXT_COLOR                         COLOR_GREY
 
-#define LABEL_SITE_SUMMERY_TEXT_FONT                   [UIFont fontWithName:@"MuseoSans-300" size:12]
+#define LABEL_SITE_SUMMERY_TEXT_FONT                   [UIFont fontWithName:@"MuseoSans-300" size:14]
 #define LABEL_SITE_SUMMERY_TEXT_COLOR                  COLOR_GREY
 
 #define LABEL_SITE_SUMMERY_NAME_TEXT_FONT              [UIFont fontWithName:@"MuseoSans-300" size:9]
 #define LABEL_SITE_SUMMERY_NAME_TEXT_COLOR             COLOR_DARK_GREY
+
+#define LABEL_UPDATE_TEXT_FONT                          [UIFont fontWithName:@"MuseoSans-300" size:13]
+#define LABEL_UPDATE_TEXT_COLOR                         COLOR_GREY
 
 #define INPUT_TEXT_FONT                                [UIFont fontWithName:@"MuseoSans-500" size:15]
 #define INPUT_TEXT_COLOR                               COLOR_WHITE
@@ -131,8 +137,15 @@
 #define RETURN_CODE_NOT_ALLOWED                        402
 
 
-
-#define URL_SERVER                                     @"https://juice.victronenergy.com"
+//#ifdef DEBUG
+//    // DEBUG VERSION
+//    #define URL_SERVER                                 @"http://juice.m2mobi.com"
+////    #define URL_SERVER                                 @"http://victron.m2mobi.com/~dinos/juice"
+////    #define URL_SERVER                                 @"http://victron.m2mobi.com/~damien/juice"
+//#else
+    // FINAL VERSION HTTPS
+    #define URL_SERVER                                 @"https://juice.victronenergy.com"
+//#endif
 
 
 #define URL_SERVER_LOGIN                               (URL_SERVER @"/user/login")
@@ -320,6 +333,8 @@ extern float const kHeaderInsetImageBottom;
 extern float const kHeaderInsetImageRight;
 extern float const kPageControlOffSetX;
 
+extern NSInteger const kNumberOfWidgetsPerPage;
+
 
 //Webservice Keys
 #define KEY_SESSION_ID                                 @"si"
@@ -397,6 +412,7 @@ typedef enum {
 	LabelStyleSiteTitle,
 	LabelStyleSiteValue,
     LabelStyleSiteValueName,
+    LabelStyleLastUpdate,
     LabelStyleOverviewTitle,
     LabelStyleOverviewValue,
     LabelStyleExtenderTitle,

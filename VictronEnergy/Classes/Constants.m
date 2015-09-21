@@ -3,7 +3,7 @@
 //  VictronEnergy
 //
 //  Created by Mandarin on 23/01/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "Constants.h"
@@ -105,6 +105,8 @@ float const kHeaderInsetImageBottom = 0.0f;
 float const kHeaderInsetImageRight = 14.0f;
 
 float const kPageControlOffSetX = 298.0f;
+
+NSInteger const kNumberOfWidgetsPerPage = 3;
 
 
 @end

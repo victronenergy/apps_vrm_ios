@@ -2,8 +2,8 @@
 //  SiteDetailCell.h
 //  VictronEnergy
 //
-//  Created by Victron Energy on 3/27/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/27/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -15,6 +15,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *lastUpdateLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *alarmImage;
 
--(void)setDataWithSiteObject:(SiteInfo *)info;
+-(void)setDataWithSiteObject:(SiteInfo *)siteInfo;
 
 @end

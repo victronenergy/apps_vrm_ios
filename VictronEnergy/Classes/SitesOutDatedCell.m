@@ -3,10 +3,16 @@
 //  VictronEnergy
 //
 //  Created by Mandarin on 21/02/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "SitesOutDatedCell.h"
+#import "NSDate+TimeAgo.h"
+#import "M2MDateFormats.h"
+
+@interface SitesOutDatedCell ()
+@property (nonatomic) BOOL didLayoutSubviews;
+@end
 
 @implementation SitesOutDatedCell
 
@@ -24,14 +30,15 @@
     self.backgroundViewForFrame.layer.borderWidth = 1.0f;
 
     self.selectedBackgroundViewFrame.backgroundColor = COLOR_LIGHT_GREY;
+}
 
-#warning iPad - For some reason iOS stretches the view for which we created an outlet in storyboard. By programmatically creating a view with the same size we can force iOS to respect the set size.
-    UIView *contentViewSelected = [[UIView alloc] initWithFrame:self.frame];
-    UIView *siteViewSelected = [[UIView alloc] initWithFrame:CGRectMake(self.backgroundViewForFrame.frame.origin.x, self.backgroundViewForFrame.frame.origin.y, self.backgroundViewForFrame.frame.size.width, self.backgroundViewForFrame.frame.size.height)];
-    siteViewSelected.backgroundColor = COLOR_GREY_SELECTION;
-    contentViewSelected.backgroundColor = COLOR_BACKGROUND;
-    [contentViewSelected addSubview:siteViewSelected];
-    self.selectedBackgroundView = contentViewSelected;
+- (void)layoutSubviews
+{
+    if(!self.didLayoutSubviews) {
+        self.didLayoutSubviews = YES;
+        self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.backgroundViewForFrame.frame];
+        self.selectedBackgroundView.backgroundColor = COLOR_GREY_SELECTION;
+    }
 }
 
 -(void)setDataWithSiteObject:(SiteInfo *)siteInfo{
@@ -39,9 +46,10 @@
     self.nameLabel.text = siteInfo.name;
 
     if (siteInfo.lastUpdated == 0) {
-        [self.lastUpdateLabel setText:[NSString stringWithFormat:NSLocalizedString(@"no_time_update", @"no_time_update")]];
+        self.lastUpdateLabel.text = [NSString stringWithFormat:NSLocalizedString(@"no_time_update", @"no_time_update")];
     }else{
-        [self.lastUpdateLabel setText:[NSString stringWithFormat:NSLocalizedString(@"Last update label", @"Last update label"),[Tools stringDateFromCurrentTime:[[NSNumber numberWithInteger:siteInfo.lastUpdated] doubleValue]]]];
+        NSString *dateString = [[M2MDateFormats sharedInstance] dateStringFromTimeStamp:siteInfo.lastUpdated];;
+        self.lastUpdateLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Last update label", @"Last update label"), dateString];
     }
 }
 

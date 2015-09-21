@@ -3,7 +3,7 @@
 //  VictronEnergy
 //
 //  Created by Mandarin on 21/02/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

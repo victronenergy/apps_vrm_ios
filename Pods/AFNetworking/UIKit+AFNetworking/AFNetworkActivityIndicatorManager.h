@@ -1,6 +1,5 @@
 // AFNetworkActivityIndicatorManager.h
-//
-// Copyright (c) 2013 AFNetworking (http://afnetworking.com)
+// Copyright (c) 2011–2015 Alamofire Software Foundation (http://alamofire.org/)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +34,7 @@
 
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
 
- By setting `isNetworkActivityIndicatorVisible` to `YES` for `sharedManager`, the network activity indicator will show and hide automatically as requests start and finish. You should not ever need to call `incrementActivityCount` or `decrementActivityCount` yourself.
+ By setting `enabled` to `YES` for `sharedManager`, the network activity indicator will show and hide automatically as requests start and finish. You should not ever need to call `incrementActivityCount` or `decrementActivityCount` yourself.
 
  See the Apple Human Interface Guidelines section about the Network Activity Indicator for more information:
  http://developer.apple.com/library/iOS/#documentation/UserExperience/Conceptual/MobileHIG/UIElementGuidelines/UIElementGuidelines.html#//apple_ref/doc/uid/TP40006556-CH13-SW44
@@ -67,7 +66,7 @@
 - (void)incrementActivityCount;
 
 /**
- Decrements the number of active network requests. If this number becomes zero before decrementing, this will stop animating the status bar network activity indicator.
+ Decrements the number of active network requests. If this number becomes zero after decrementing, this will stop animating the status bar network activity indicator.
  */
 - (void)decrementActivityCount;
 

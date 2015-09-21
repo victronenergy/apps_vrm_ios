@@ -2,8 +2,8 @@
 //  AppDelegate.m
 //  Victron Energy
 //
-//  Created by Victron Energy on 3/5/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/5/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -11,11 +11,16 @@
 #import "SitesScrollViewController.h"
 #import "SiteDetailViewController.h"
 #import "GAI.h"
+#import "NSDate+TimeAgo.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Fabric with:@[CrashlyticsKit]];
+
     // Override point for customization after application launch.
 
     [[UINavigationBar appearance]setBarTintColor:COLOR_NAV_BAR];
@@ -26,9 +31,7 @@
     // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
     [GAI sharedInstance].dispatchInterval = 20;
     // Create tracker instance.
-    
-    
-    [[GAI sharedInstance] trackerWithTrackingId:@"XXXXXXXXXX"];
+    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-36047521-1"];
 
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
 

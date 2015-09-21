@@ -3,7 +3,7 @@
 //  VictronEnergy
 //
 //  Created by Mandarin on 30/01/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "BMV+MPPTCell.h"
@@ -28,19 +28,19 @@
     self.contentView.backgroundColor = COLOR_BACKGROUND;
 }
 
--(void)setDataWithAttributesInfo:(AttributesInfo *)attributesInfo withSite:(SiteInfo *)siteInfo
+- (void)setDataWithSite:(SiteInfo *)siteInfo
 {
     // Set the arrow directions
-    self.dcSystemArrowImage.image = [Tools arrowImageForPositiveRight:[attributesInfo getValueForCode:kAttributeDCSystem ]];
-    self.solarArrowImageView.image = [Tools arrowImageForAlwaysRightOrPositive:[attributesInfo getValueForCode:kAttributePV_DC_Coupled]];
+    self.dcSystemArrowImage.image = [Tools arrowImageForPositiveRight:[siteInfo.siteAttributes getValueForCode:kAttributeDCSystem ]];
+    self.solarArrowImageView.image = [Tools arrowImageForAlwaysRightOrPositive:[siteInfo.siteAttributes getValueForCode:kAttributePV_DC_Coupled]];
 
     // Set the values
-    self.batteryVoltageLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryVoltage formattedAs:VOLT hideIfUnavailable:NO];
-    self.consumedLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryConsumedAmphours formattedAs:AMPHOUR hideIfUnavailable:NO];
-    self.batterySocLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryStateOfCharge formattedAs:PERCENTAGE hideIfUnavailable:YES];
-    self.timeToGoLabel.text = [attributesInfo getFormattedValueForCode:kAttributeBatteryTimeToGo formattedAs:TIME hideIfUnavailable:YES];
-    self.dcSystemValueLabel.text = [attributesInfo getFormattedValueForCode:kAttributeDCSystem formattedAs:WATTS hideIfUnavailable:NO];
-    self.solarWattLabel.text = [attributesInfo getFormattedValueForCode:kAttributePV_DC_Coupled formattedAs:WATTS hideIfUnavailable:NO];
+    self.batteryVoltageLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryVoltage formattedAs:VOLT hideIfUnavailable:NO];
+    self.consumedLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryConsumedAmphours formattedAs:AMPHOUR hideIfUnavailable:NO];
+    self.batterySocLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryStateOfCharge formattedAs:PERCENTAGE hideIfUnavailable:YES];
+    self.timeToGoLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeBatteryTimeToGo formattedAs:TIME hideIfUnavailable:YES];
+    self.dcSystemValueLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributeDCSystem formattedAs:WATTS hideIfUnavailable:NO];
+    self.solarWattLabel.text = [siteInfo.siteAttributes getFormattedValueForCode:kAttributePV_DC_Coupled formattedAs:WATTS hideIfUnavailable:NO];
 
     // Show hide DC System
     if(siteInfo.hasDcSystem == 0) {

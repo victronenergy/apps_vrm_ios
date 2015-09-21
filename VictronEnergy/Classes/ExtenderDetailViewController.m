@@ -2,13 +2,14 @@
 //  ExtenderDetailViewController.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 4/9/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 4/9/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "ExtenderDetailViewController.h"
 #import "Data.h"
 #import "KeychainItemWrapper.h"
+#import "M2MLoginService.h"
 
 @interface ExtenderDetailViewController ()
 
@@ -154,7 +155,7 @@
 - (void) saveExtenderName
 {
     NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-    [postDict setValue:[Data sharedData].sessionId forKey:kM2MWebServiceSessionId];
+    [postDict setValue:[M2MLoginService sharedInstance].currentSessionId forKey:kM2MWebServiceSessionId];
     [postDict setValue:@"1" forKey:kM2MWebServiceVerificationToken];
     [postDict setValue:[NSNumber numberWithInteger:self.selectedSite.siteID] forKey:kM2MWebServiceSiteId];
     [postDict setValue:[NSNumber numberWithInteger:self.selectedExtender.dataAtributeID] forKey:kM2MWebServiceAttributeID];
@@ -177,6 +178,7 @@
 
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (operation.response.statusCode == 403) {
+            // Temporary added, When Matthijs made a decision this will be changed
             [SVProgressHUD dismiss];
             NSString *kM2MErrorTitle = @"Error!";
             NSString *kM2MErrorMessage = @"There has been a connection issue";
@@ -189,27 +191,19 @@
             [manager POST:URL_SERVER_LOGIN parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
                 [SVProgressHUD dismiss];
-                [Data sharedData].sessionId=[responseObject objectForKey:KEY_SESSION_ID];
+                [M2MLoginService sharedInstance].currentSessionId = [responseObject objectForKey:KEY_SESSION_ID];
                 [self saveExtenderName];
 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 
                 [SVProgressHUD dismiss];
 
-                UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-                if (alert) {
-                    [alert show];
-                }
+                [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
             }];
         } else {
             [SVProgressHUD dismiss];
 
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-            if (alert) {
-                [alert show];
-            }
+            [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
         }
     }];
 }

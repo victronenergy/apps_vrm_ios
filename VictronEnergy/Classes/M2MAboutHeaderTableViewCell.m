@@ -2,8 +2,8 @@
 //  M2MAboutHeaderTableViewCell.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 04/07/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Created by Lime on 04/07/14.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "M2MAboutHeaderTableViewCell.h"

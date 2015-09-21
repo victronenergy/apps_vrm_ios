@@ -2,8 +2,8 @@
 //  SiteListTable.m
 //  Victron Energy
 //
-//  Created by Victron Energy on 3/12/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 3/12/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "SiteListTableViewController.h"
@@ -23,6 +23,11 @@
 #import "LoginViewController.h"
 #import "NoSitesAvailableCell.h"
 #import "M2MAboutViewController.h"
+#import "M2MLoginService.h"
+#import "M2MCredentials.h"
+#import "M2MCredentialsStorage.h"
+#import "M2MSiteService.h"
+#import "M2MAttributesService.h"
 
 const float kSearchBarHeight = 44.0f;
 
@@ -91,8 +96,6 @@ const float kSearchBarHeight = 44.0f;
 		_refreshHeaderView = view;
 	}
 
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableViewWithData:) name:NOTIFICATION_SITE_LIST object:nil];
-
     self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"back_button_title", @"back_button_title");
     self.navigationItem.title = NSLocalizedString(@"site_summary_title", @"site_summary_title");
 
@@ -110,6 +113,19 @@ const float kSearchBarHeight = 44.0f;
     UIBarButtonItem *rightButtonAbout = [[UIBarButtonItem alloc] initWithCustomView:self.aboutButton];
 
     self.navigationItem.rightBarButtonItems = @[rightButtonWebview,rightButtonAbout];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (void)applicationActive:(id)applicationActive
+{
+    if([self.sitesList count] != 0){
+        self.lastReloadDate = nil;
+        [self reloadIfNeeded];
+    }
+
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -121,10 +137,48 @@ const float kSearchBarHeight = 44.0f;
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    if (![Data sharedData].userIsLoggedIn) {
-        [self performSegueWithIdentifier:@"loginSegue" sender:self];
-    } else {
+    [super viewDidAppear:animated];
+
+    M2MLoginService *loginService = [M2MLoginService sharedInstance];
+    if(!loginService.loggedIn) {
+
+        M2MCredentialsStorage *credentialsStorage = [M2MCredentialsStorage new];
+        M2MCredentials *credentials = [credentialsStorage getCurrentUserCredentials];
+
+        if([credentials.username isEqualToString:@""] || [credentials.username isEqualToString:LOGIN_DEMO_EMAIL]){
+            [self performSegueWithIdentifier:@"loginSegue" sender:self];
+            return;
+        }
+
+        [SVProgressHUD show];
+        [loginService loginWithCredentials:credentials success:^(NSInteger statusCode) {
+            [SVProgressHUD dismiss];
+            [self reloadIfNeeded];
+        } failure:^(NSInteger statusCode) {
+            [SVProgressHUD dismiss];
+            [self performSegueWithIdentifier:@"loginSegue" sender:self];
+        }];
+    }else{
+        [self reloadIfNeeded];
+    }
+
+}
+
+- (void)reloadIfNeeded
+{
+    NSDate *currentDate = [NSDate date];
+    if(!self.lastReloadDate){
+        self.lastReloadDate = currentDate;
         [self reloadTableViewDataSource];
+        return;
+    }
+
+    NSTimeInterval secondsElapsed = [currentDate timeIntervalSinceDate:self.lastReloadDate];
+    CGFloat minutesElapsed = secondsElapsed / 60;
+    
+    if(minutesElapsed > 5){
+        [self reloadTableViewDataSource];
+        self.lastReloadDate = currentDate;
     }
 }
 
@@ -204,9 +258,10 @@ const float kSearchBarHeight = 44.0f;
 
 
 - (IBAction)logOutButtonPressed:(id)sender {
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEY_CHAIN_IDENTIFIER accessGroup:nil];
-    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-    NSString *logoutMessage = [NSString stringWithFormat:NSLocalizedString(@"log_out_button", @"log_out_button"),username];
+    M2MCredentialsStorage *credentialsStorage = [M2MCredentialsStorage new];
+    M2MCredentials *credentials = [credentialsStorage getCurrentUserCredentials];
+
+    NSString *logoutMessage = [NSString stringWithFormat:NSLocalizedString(@"log_out_button", @"log_out_button"),credentials.username];
 
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:nil
                                                       message:logoutMessage
@@ -226,10 +281,8 @@ const float kSearchBarHeight = 44.0f;
                                                                label:@"logout_button"
                                                                value:nil] build]];
 
-        KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEY_CHAIN_IDENTIFIER accessGroup:nil];
-        [keychainItem resetKeychainItem];
-        [Data sharedData].sessionId = nil;
-        [Data sharedData].userIsDemoUser = NO;
+        M2MLoginService *loginService = [M2MLoginService sharedInstance];
+        [loginService logout];
 
         UIViewController *presentingVC;
         // Determine if we should present the modal login screen from our self (iPhone) or the SplitViewController (iPad)
@@ -257,6 +310,7 @@ const float kSearchBarHeight = 44.0f;
             [self.sitesList        removeAllObjects];
             [self.sitesListResults removeAllObjects];
             self.selectedSite = nil;
+            self.lastReloadDate = nil;
 
             [self.tableView reloadData];
 
@@ -290,16 +344,11 @@ const float kSearchBarHeight = 44.0f;
 
 - (void)webViewButtonPressed:(id)sender {
 
-    NSString *password = @"";
-    NSString *username = @"";
-    if ([[Data sharedData]userIsDemoUser]) {
-        password = [[Data sharedData]password];
-        username = [[Data sharedData]username];
-    }else{
-        KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEY_CHAIN_IDENTIFIER accessGroup:nil];
-        password = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
-        username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-    }
+    M2MCredentialsStorage *credentialsStorage = [M2MCredentialsStorage new];
+    M2MCredentials *credentials = [credentialsStorage getCurrentUserCredentials];
+
+    NSString *username = credentials.username;
+    NSString *password = credentials.password;
 
     NSURL *url = WEBVIEW_URL_REQUEST;
     NSString *body = [NSString stringWithFormat: @"username=%@&password=%@",username,password];
@@ -382,19 +431,28 @@ const float kSearchBarHeight = 44.0f;
     [self.tableView reloadData];
 }
 
--(void)viewWillDisappear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
-}
-
 -(void)getSites
 {
-    [Sites getSites];
+    __weak typeof(self)weakSelf = self;
+
+    [[M2MSiteService new] getSitesWithSuccess:^(NSArray *sites) {
+        weakSelf.sitesList = [sites mutableCopy];
+        [weakSelf reloadTableViewWithData:nil];
+
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            weakSelf.detailViewManager.sitesList = weakSelf.sitesList;
+        }
+
+        if(weakSelf.scrollViewController){
+            weakSelf.scrollViewController.sitesList = weakSelf.sitesList;
+        }
+    } failure:^(NSInteger statusCode) {
+        [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
+    }];
 }
 
 -(void)reloadTableViewWithData:(NSNotification *)notification
 {
-    self.sitesList = [[notification userInfo]objectForKey:@"sites"];
     [self sortSitesForSiteListWithArray:self.sitesList];
 
     [self doneLoadingTableViewData];
@@ -422,7 +480,6 @@ const float kSearchBarHeight = 44.0f;
         }
     }
 
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:notification.name object:nil];
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
@@ -470,7 +527,6 @@ const float kSearchBarHeight = 44.0f;
 
 - (void)reloadTableViewDataSource{
 	_reloading = YES;
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadTableViewWithData:) name:NOTIFICATION_SITE_LIST object:nil];
     [self getSites];
 }
 
@@ -590,7 +646,7 @@ const float kSearchBarHeight = 44.0f;
         if (indexPath.section == 0) {
             return 120.0f;
         } else if (indexPath.section == 1) {
-            return 90.0f;
+            return 120.0f;
         } else {
             return 70.0f;
         }
@@ -601,7 +657,9 @@ const float kSearchBarHeight = 44.0f;
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 76)];
 
-    UIImageView *headerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(8, 16, 304, 60)];
+    CGFloat sidePadding = 8;
+    
+    UIImageView *headerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(sidePadding, sidePadding * 2, SCREEN_WIDTH - (sidePadding * 2), 60)];
     headerImageView.image = [[UIImage imageNamed:@"heading_corner.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(kHeaderInsetImageTop, kHeaderInsetImageLeft, kHeaderInsetImageBottom, kHeaderInsetImageRight)];
 
     [headerView addSubview:headerImageView];
@@ -630,6 +688,7 @@ const float kSearchBarHeight = 44.0f;
         if (indexPath.section == 0) {
             SitesWithAlarmCell *cell = (SitesWithAlarmCell *)[tableView dequeueReusableCellWithIdentifier:@"SitesWithAlarmCell"];
             SiteInfo *info = [self.sitesListResults objectAtIndex:indexPath.row ];
+
             if (!info.siteAttributes && info.isLoadingWidgets) {
                 [self getAttributesForSite:info withTableViewCell:cell];
             }
@@ -663,35 +722,33 @@ const float kSearchBarHeight = 44.0f;
     [self.sitesSearchBar setText:SEARCH_BAR_EMPTY];
     [self.sitesSearchBar resignFirstResponder];
 
-    SitesScrollViewController *scrollViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"scrollView"];
+    self.scrollViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"scrollView"];
 
     if (indexPath.section == 0) {
         self.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row];
-        scrollViewController.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row];
-        scrollViewController.siteIndex = [self.sitesList indexOfObject:self.selectedSite];
+        self.scrollViewController.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row];
+        self.scrollViewController.siteIndex = [self.sitesList indexOfObject:self.selectedSite];
     } else if (indexPath.section == 1) {
         self.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row + self.sitesAlarmsCount];
-        scrollViewController.siteIndex = [self.sitesList indexOfObject:self.selectedSite];
-        scrollViewController.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row + self.sitesAlarmsCount];
+        self.scrollViewController.siteIndex = [self.sitesList indexOfObject:self.selectedSite];
+        self.scrollViewController.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row + self.sitesAlarmsCount];
     } else {
         self.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row + self.sitesAlarmsCount + self.sitesOkCount];
-        scrollViewController.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row + self.sitesAlarmsCount + self.sitesOkCount];
-        scrollViewController.siteIndex = [self.sitesList indexOfObject:self.selectedSite];
+        self.scrollViewController.selectedSite = [self.sitesListResults objectAtIndex:indexPath.row + self.sitesAlarmsCount + self.sitesOkCount];
+        self.scrollViewController.siteIndex = [self.sitesList indexOfObject:self.selectedSite];
     }
-    scrollViewController.sitesList = self.sitesList;
+    self.scrollViewController.sitesList = self.sitesList;
 
     self.indexOfSelectedSiteInList = [self.sitesList indexOfObject:self.selectedSite];
-    [Data sharedData].siteId = [NSNumber numberWithInteger: self.selectedSite.siteID];
-    [Data sharedData].hasGenerator = self.selectedSite.hasGenerator;
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self.navigationController pushViewController:scrollViewController animated:YES];
+        [self.navigationController pushViewController:self.scrollViewController animated:YES];
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
 
         // Send relevant Site Info to the detail view manager.
-        self.detailViewManager.selectedSite = scrollViewController.selectedSite;
-        self.detailViewManager.siteIndex = scrollViewController.siteIndex;
-        self.detailViewManager.sitesList = scrollViewController.sitesList;
+        self.detailViewManager.selectedSite = self.scrollViewController.selectedSite;
+        self.detailViewManager.siteIndex = self.scrollViewController.siteIndex;
+        self.detailViewManager.sitesList = self.scrollViewController.sitesList;
 
         // Tell the detail view manager to load a view controller with the selected site's details.
         [self.detailViewManager loadSelectedView];
@@ -716,18 +773,17 @@ const float kSearchBarHeight = 44.0f;
 
 -(void)getAttributesForSite:(SiteInfo *)siteInfo withTableViewCell:(UITableViewCell *)cell {
 
-    [Attributes loadSiteAttributesWithSiteID:[NSNumber numberWithInteger:siteInfo.siteID] result:^(AttributesInfo *attributes){
+    [[M2MAttributesService new] loadSiteAttributesWithSiteID:@(siteInfo.siteID) success:^(AttributesInfo *attributes) {
+
         if (attributes) {
             siteInfo.siteAttributes = attributes;
             siteInfo.isLoadingWidgets = NO;
             [siteInfo setSummaryWidgetsforAttributes:attributes];
-
             [self reloadCellAfterFetchingWidgetsWithTableViewCell:cell];
         }
-        // NSString *failureText for now because not yet decided how to handle this
-    } failure:^(NSString *failureText){
+    } failure:^(NSInteger statusCode) {
         siteInfo.isLoadingWidgets = NO;
-        [self reloadCellAfterFetchingWidgetsWithTableViewCell:cell];
+        [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
     }];
 }
 
@@ -755,7 +811,4 @@ const float kSearchBarHeight = 44.0f;
     return YES;
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-}
 @end

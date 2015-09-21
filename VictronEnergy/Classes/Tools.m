@@ -23,49 +23,6 @@
     return [emailTest evaluateWithObject:candidate];
 }
 
-+(BOOL)validateName:(NSString *)candidate
-{
-    NSString *nameRegex = @"[a-zA-Z\\s-']{2,32}";
-    NSPredicate *nameTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", nameRegex];
-
-    return [nameTest evaluateWithObject:candidate];
-}
-
-+ (NSString *)stringDateFromCurrentTime:(NSTimeInterval)unixDateToConvert
-{
-    NSDate *tempDate = [NSDate dateWithTimeIntervalSince1970:unixDateToConvert];
-
-    NSTimeInterval intervalInMinutes = round([tempDate timeIntervalSinceNow] / 60.0f) *-1;
-	if (intervalInMinutes <= 1) {
-        return intervalInMinutes <= 0 ? NSLocalizedString(@"less than a minute ago", @"") : NSLocalizedString(@"1 minute ago", @"") ;
-	} else if (intervalInMinutes >= 2 && intervalInMinutes <= 44) {
-		return [NSString stringWithFormat:NSLocalizedString(@"%.0f minutes ago", @""), intervalInMinutes];
-	} else if (intervalInMinutes >= 45 && intervalInMinutes <= 89) {
-		return NSLocalizedString(@"about 1 hour ago",@"");
-	} else if (intervalInMinutes >= 90 && intervalInMinutes <= 1439) {
-		return [NSString stringWithFormat:NSLocalizedString(@"about %.0f hours ago", @""), round(intervalInMinutes / 60.0f)];
-	} else if (intervalInMinutes >= 1440 && intervalInMinutes <= 2879) {
-		return NSLocalizedString(@"1 day ago",@"");
-	} else if (intervalInMinutes >= 2880 && intervalInMinutes <= 43199) {
-		return [NSString stringWithFormat:NSLocalizedString(@"%.0f days ago", @""), round(intervalInMinutes / 1440.0f)];
-	} else if (intervalInMinutes >= 43200 && intervalInMinutes <= 86399) {
-		return NSLocalizedString(@"about 1 month ago",@"");
-	} else if (intervalInMinutes >= 86400 && intervalInMinutes <= 525599) {
-		return [NSString stringWithFormat:NSLocalizedString(@"%.0f months ago", @""), round(intervalInMinutes / 43200.0f)];
-	} else if (intervalInMinutes >= 525600 && intervalInMinutes <= 1051199) {
-		return NSLocalizedString(@"about 1 year ago",@"");
-	} else {
-		return [NSString stringWithFormat:NSLocalizedString(@"over %.0f years ago", @""), round(intervalInMinutes / 525600.0f)];
-	}
-	return nil;
-}
-
-+(NSString *)returnDateFromUnixTimeStamp:(NSNumber *)timestamp
-{
-    NSDate *returnDate = [NSDate dateWithTimeIntervalSince1970:[timestamp doubleValue]];
-    return [self convertToLastUpdateDate:returnDate];
-}
-
 +(NSString *)convertToLastUpdateDate:(NSDate *)date
 {
    NSDateFormatter *df = [[NSDateFormatter alloc] init];
@@ -228,6 +185,12 @@
             theLabel.textColor =                   LABEL_SITE_SUMMERY_NAME_TEXT_COLOR;
             break;
         }
+        case LabelStyleLastUpdate:{
+            theLabel.font =                        LABEL_UPDATE_TEXT_FONT;
+            theLabel.textColor =                   LABEL_UPDATE_TEXT_COLOR;
+            break;
+        }
+
         case LabelStyleOverviewTitle:{
             theLabel.font =                        LABEL_OVERVIEW_TITLE_TEXT_FONT;
             theLabel.textColor =                   LABEL_OVERVIEW_TITLE_TEXT_COLOR;

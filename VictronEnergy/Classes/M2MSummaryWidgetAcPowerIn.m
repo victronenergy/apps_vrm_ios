@@ -2,8 +2,8 @@
 //  M2MSummaryWidgetAcPowerIn.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 11/03/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Created by Lime on 11/03/14.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "M2MSummaryWidgetAcPowerIn.h"
@@ -17,11 +17,12 @@
         if ([attribute isAttributeSet:kAttributeGensetL1]) {
             // Genset
             self.widgetLabel = NSLocalizedString(@"widget_header_genset", @"widget_header_genset");
+            self.image = [UIImage imageNamed:@"ic_genset"];
         } else {
             // Grid
             self.widgetLabel = NSLocalizedString(@"widget_header_grid", @"widget_header_grid");
+            self.image = [UIImage imageNamed:@"ic_kwh_metre"];
         }
-        self.image = [UIImage imageNamed:@"ic_kwh_metre.png"];
         [self setTextWithAttribute:attribute];
     }
     return self;

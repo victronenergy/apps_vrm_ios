@@ -2,8 +2,8 @@
 //  M2MSummaryWidgetAcLoad.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 11/03/14.
-//  Copyright (c) 2014 Victron Energy. All rights reserved.
+//  Created by Lime on 11/03/14.
+//  Copyright (c) 2014 Thijs Bouma. All rights reserved.
 //
 
 #import "M2MSummaryWidgetAcLoad.h"
@@ -15,7 +15,7 @@
     self = [self init];
     if (self != nil) {
         self.widgetLabel = NSLocalizedString(@"widget_header_ac_load", @"widget_header_ac_load");
-        self.image = [UIImage imageNamed:@"ic_kwh_metre.png"];
+        self.image = [UIImage imageNamed:@"ac_load"];
         [self setTextWithAttribute:attribute];
     }
     return self;

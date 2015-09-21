@@ -2,13 +2,15 @@
 //  HistoricDataViewController.m
 //  VictronEnergy
 //
-//  Created by Victron Energy on 5/7/13.
-//  Copyright (c) 2013 Victron Energy. All rights reserved.
+//  Created by Thijs on 5/7/13.
+//  Copyright (c) 2013 Thijs Bouma. All rights reserved.
 //
 
 #import "HistoricDataViewController.h"
 #import "HistoricDataInfo.h"
 #import "Data.h"
+#import "M2MLoginService.h"
+#import "M2MHistoricDataService.h"
 
 @interface HistoricDataViewController ()
 
@@ -30,9 +32,6 @@
     [super viewDidLoad];
 	self.screenName = @"HistoricData - iPhone";
     self.view.backgroundColor = COLOR_BACKGROUND;
-
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reloadViewWithData:) name:KEY_HISTORIC_DATA_NOTIFICATION object:nil];
-
     self.navigationItem.title = NSLocalizedString(@"historic_data_title", @"historic_data_title");
     self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"back_button_title", @"back_button_title");
 
@@ -88,62 +87,13 @@
 }
 -(void)getSiteAttributesForHistoricData
 {
-    __block NSNumber *siteID = [NSNumber numberWithInteger:self.selectedSite.siteID];
-    NSMutableDictionary *postDict = [[NSMutableDictionary alloc] init];
-    [postDict setValue:[Data sharedData].sessionId forKey:kM2MWebServiceSessionId];
-    [postDict setValue:kM2MWebServiceVerificationTokenValue forKey:kM2MWebServiceVerificationToken];
-    [postDict setValue:kM2MWebServiceVersionNumber forKey:kM2MWebServiceVersion];
-    [postDict setValue:siteID forKey:kM2MWebServiceSiteId];
-    [postDict setValue:[NSNumber numberWithInteger:self.selectedSite.instanceNumber] forKey:kM2MWebServiceInstance];
-    [postDict setValue:[NSString stringWithFormat:@"[%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@]",kHistoricDataDeepestDischarge,kHistoricDataLastDischarge, kHistoricDataAverageDischarge, kHistoricDataChargeCycles, kHistoricDataFullDischarge, kHistoricDataTotalAhDrawn, kHistoricDataMinimumVoltage, kHistoricDataMaximumVoltage, kHistoricDataTimeSinceLastFullCharge, kHistoricDataAutomaticSyncs, kHistoricDataLowVoltageAlarms, kHistoricDataHighVoltageAlarms, kHistoricDataLowStarterVoltageAlarms, kHistoricDataHighStarterVoltageAlarms, kHistoricDataMinimumStarterVoltage, kHistoricDataMaximumStarterVoltage] forKey:kM2MWebServiceAttributes];
+    __weak HistoricDataViewController *weakSelf = self;
 
-    [SVProgressHUD show];
-
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
-    [manager POST:URL_SERVER_ATTRIBUTE_OBJECT parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-        [SVProgressHUD dismiss];
-
-        UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-        if (alert) {
-            [alert show];
-        } else {
-            NSDictionary *responseDictionary = [responseObject objectForKey:kM2MResponseData];
-            NSArray *attributesArray = [responseDictionary objectForKey:kM2MResponseAttributes];
-            self.siteHistoricAttributesInfo = [[AttributesInfo alloc]initWithArray:attributesArray];
-            [self reloadViewWithData];
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (operation.response.statusCode == RETURN_CODE_SESSION_EXPIRED) {
-            NSMutableDictionary *postDict = [Tools setPostDict];
-
-            [manager POST:URL_SERVER_LOGIN parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-                [SVProgressHUD dismiss];
-                [Data sharedData].sessionId=[responseObject objectForKey:KEY_SESSION_ID];
-                [self getSiteAttributesForHistoricData];
-
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                [SVProgressHUD dismiss];
-
-                UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-                if (alert) {
-                    [alert show];
-                }
-            }];
-        } else {
-            [SVProgressHUD dismiss];
-
-            UIAlertView *alert = [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:operation.response.statusCode];
-
-            if (alert) {
-                [alert show];
-            }
-        }
+    [[M2MHistoricDataService new] loadHistoricDataWithSiteID:self.selectedSite.siteID instanceNumber:self.selectedSite.instanceNumber success:^(AttributesInfo *attributesInfo) {
+        weakSelf.siteHistoricAttributesInfo = attributesInfo;
+        [weakSelf reloadViewWithData];
+    } failure:^(NSInteger statusCode) {
+        [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
     }];
 }
 
@@ -176,46 +126,4 @@
     return YES;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)viewDidUnload {
-    [self setDdNameLabel:nil];
-    [self setLdNameLabel:nil];
-    [self setAdNameLabel:nil];
-    [self setCcNameLabel:nil];
-    [self setFdNameLabel:nil];
-    [self setTadNameLabel:nil];
-    [self setMinvNameLabel:nil];
-    [self setMaxvNameLabel:nil];
-    [self setTslcNameLabel:nil];
-    [self setAsNameLabel:nil];
-    [self setLvaNameLabel:nil];
-    [self setHvaNameLabel:nil];
-    [self setLsvaNameLabel:nil];
-    [self setHsvaNameLabel:nil];
-    [self setMinsvNameLabel:nil];
-    [self setMaxsvNameLabel:nil];
-    [self setDdValueLabel:nil];
-    [self setLdValueLabel:nil];
-    [self setAdValueLabel:nil];
-    [self setCcValueLabel:nil];
-    [self setFdValueLabel:nil];
-    [self setTadValueLabel:nil];
-    [self setMinvValueLabel:nil];
-    [self setMaxvValueLabel:nil];
-    [self setTslcValueLabel:nil];
-    [self setAsValueLabel:nil];
-    [self setLvaValueLabel:nil];
-    [self setHvaValueLabel:nil];
-    [self setLsvaValueLabel:nil];
-    [self setHsvaValueLabel:nil];
-    [self setMinsvValueLabel:nil];
-    [self setMaxsvValueLabel:nil];
-    [self setScroller:nil];
-    [super viewDidUnload];
-}
 @end
