@@ -659,7 +659,7 @@ const float kSearchBarHeight = 44.0f;
 
     CGFloat sidePadding = 8;
     
-    UIImageView *headerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(sidePadding, sidePadding * 2, SCREEN_WIDTH - (sidePadding * 2), 60)];
+    UIImageView *headerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(sidePadding, sidePadding * 2, self.view.frame.size.width - (sidePadding * 2), 60)];
     headerImageView.image = [[UIImage imageNamed:@"heading_corner.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(kHeaderInsetImageTop, kHeaderInsetImageLeft, kHeaderInsetImageBottom, kHeaderInsetImageRight)];
 
     [headerView addSubview:headerImageView];
