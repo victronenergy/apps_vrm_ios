@@ -1,7 +1,0 @@
-FRAMEWORK_SEARCH_PATHS = "$(PODS_ROOT)/Crashlytics" "$(PODS_ROOT)/Fabric"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworkActivityLogger" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/Crashlytics" "${PODS_ROOT}/Headers/Public/Fabric" "${PODS_ROOT}/Headers/Public/SVProgressHUD"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AFNetworkActivityLogger" -isystem "${PODS_ROOT}/Headers/Public/AFNetworking" -isystem "${PODS_ROOT}/Headers/Public/Crashlytics" -isystem "${PODS_ROOT}/Headers/Public/Fabric" -isystem "${PODS_ROOT}/Headers/Public/SVProgressHUD"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"Pods-AFNetworkActivityLogger" -l"Pods-AFNetworking" -l"Pods-SVProgressHUD" -l"c++" -l"z" -framework "CoreGraphics" -framework "Crashlytics" -framework "Fabric" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit"
-OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
-PODS_ROOT = ${SRCROOT}/Pods
