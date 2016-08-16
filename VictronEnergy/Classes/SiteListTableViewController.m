@@ -161,6 +161,9 @@ const float kSearchBarHeight = 44.0f;
     }else{
         [self reloadIfNeeded];
     }
+    
+    NSLog(@"site list table appear");
+    [self reloadTableViewDataSource];
 
 }
 
@@ -482,8 +485,12 @@ const float kSearchBarHeight = 44.0f;
 
 }
 
+
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
+    //Reload the table view on orientation change to make sure the layout is displayed correctly
+    [self reloadTableViewDataSource];
+    
     [self.sitesSearchBar resignFirstResponder];
 }
 

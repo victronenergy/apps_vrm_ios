@@ -72,6 +72,10 @@ const NSInteger kCollectionViewRowHeigthIPad = 114;
     [self.tableView addSubview:self.refreshHeaderView];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [self reloadSite];
+}
+
 - (void)setSelectedSite:(SiteInfo *)selectedSite
 {
     _selectedSite = selectedSite;
@@ -131,6 +135,14 @@ const NSInteger kCollectionViewRowHeigthIPad = 114;
         [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
         [self doneLoadingTableViewData];
     }];
+}
+
+
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    //Reload the site to prevent weird layout buggs
+    [self reloadSite];
+    
 }
 
 -(void)getSiteAttributes

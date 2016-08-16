@@ -38,5 +38,6 @@
 - (void)loadSelectedView;
 - (void)showMasterPopoverInPortrait;
 - (void)hideMasterPopoverInPortrait;
+- (void)reloadScroll;
 
 @end

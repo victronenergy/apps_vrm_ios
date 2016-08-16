@@ -133,6 +133,11 @@ typedef enum ScrollDirection {
     }
 }
 
+-(void)reloadScroll {
+    NSLog(@"reload scroll");
+    [self reloadScrollview];
+}
+
 -(void)buildScrollViewContent {
     // Loads a detail view controller for the selected site
     // and also for the two sites, if any, next to it in the site list.
@@ -212,6 +217,7 @@ typedef enum ScrollDirection {
 /** On rotation remove all loaded Site Details, and reload the Site Details for the currently selected Site. */
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
+    NSLog(@"site scroll orientation");
     [self reloadScrollview];
 }
 
@@ -231,7 +237,7 @@ typedef enum ScrollDirection {
     //}
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 
@@ -241,6 +247,12 @@ typedef enum ScrollDirection {
         // Reload the scrollview if we navigate back from e.g. Historic Data after we've just rotated the device.
         [self reloadScrollview];
     }
+    
+    
+    NSLog(@"Site Scroll View Did Appear");
+    
+    //Reload the scrollview contents to prevent weird layout buggs
+    [self reloadScrollview];
 }
 
 #pragma mark - Webview Button

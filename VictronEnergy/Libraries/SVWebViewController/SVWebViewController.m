@@ -63,6 +63,15 @@
     return backBarButtonItem;
 }
 
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    NSLog(@"orientation change");
+    [mainWebView stringByEvaluatingJavaScriptFromString:@"var e = document.createEvent('Events'); "
+     @"e.initEvent('orientationchange', true, false);"
+     @"document.dispatchEvent(e); "];
+    
+}
+
 - (UIBarButtonItem *)forwardBarButtonItem {
 
     if (!forwardBarButtonItem) {
@@ -367,6 +376,7 @@
 #pragma mark - Target actions
 
 - (void)goBackClicked:(UIBarButtonItem *)sender {
+    NSLog(@"go back clicked");
     [mainWebView goBack];
 }
 

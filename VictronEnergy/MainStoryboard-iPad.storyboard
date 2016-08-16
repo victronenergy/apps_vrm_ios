@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="xD3-v0-Sel">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="xD3-v0-Sel">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -209,7 +209,7 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="scrollView" destination="arR-9N-eTy" id="uZS-eb-aFq"/>
-                        <segue destination="r2A-Rv-2eI" kind="modal" identifier="iPadLoginPortraitSegue" modalPresentationStyle="fullScreen" animates="NO" id="kiE-Gj-i2c"/>
+                        <segue destination="r2A-Rv-2eI" kind="modal" identifier="iPadLoginPortraitSegue" animates="NO" modalPresentationStyle="fullScreen" id="kiE-Gj-i2c"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NWZ-7a-eMO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -377,7 +377,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="raK-gh-nGe">
-                            <rect key="frame" x="0.0" y="2333" width="768" height="211"/>
+                            <rect key="frame" x="0.0" y="2399" width="768" height="211"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="oEv-d9-RYW">
@@ -552,10 +552,10 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="gray" indentationWidth="10" reuseIdentifier="M2MDetailOutDatedCell" id="msP-iM-Gng" customClass="M2MDetailOutDatedCell">
-                                <rect key="frame" x="0.0" y="204" width="768" height="110"/>
+                                <rect key="frame" x="0.0" y="204" width="768" height="141"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" tableViewCell="msP-iM-Gng" id="dJr-I9-acd">
-                                    <rect key="frame" x="0.0" y="0.0" width="768" height="110"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="768" height="141"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mxv-ym-eM2">
@@ -625,9 +625,10 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LastUpdateCell" rowHeight="35" id="lGl-3M-MW6" customClass="M2MLastUpdateCell">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                                <rect key="frame" x="0.0" y="345" width="768" height="35"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lGl-3M-MW6" id="DBu-2b-PSV">
+                                    <rect key="frame" x="0.0" y="0.0" width="768" height="35"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hSP-Jj-pxh">
@@ -653,7 +654,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" none="YES" notEnabled="YES"/>
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
                                 </accessibility>
                                 <connections>
                                     <outlet property="backgroundBorderView" destination="hSP-Jj-pxh" id="awK-Qq-aic"/>
@@ -661,7 +662,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Cell2" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BMVCell" rowHeight="187" id="naV-vB-dJr" userLabel="BMV Cell - Cell2" customClass="BMVCell">
-                                <rect key="frame" x="0.0" y="314" width="768" height="187"/>
+                                <rect key="frame" x="0.0" y="380" width="768" height="187"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="naV-vB-dJr" id="DH6-JI-Tct">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="187"/>
@@ -786,7 +787,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="" selectionStyle="none" indentationWidth="10" reuseIdentifier="MultiCell" rowHeight="271" id="yes-W2-yRL" customClass="MultiCell">
-                                <rect key="frame" x="0.0" y="501" width="768" height="271"/>
+                                <rect key="frame" x="0.0" y="567" width="768" height="271"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yes-W2-yRL" id="9w5-cD-5ve">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="271"/>
@@ -1002,7 +1003,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GeneratorButtonCell" rowHeight="89" id="JTt-Eh-IqF" customClass="GeneratorButtonCell">
-                                <rect key="frame" x="0.0" y="772" width="768" height="89"/>
+                                <rect key="frame" x="0.0" y="838" width="768" height="89"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JTt-Eh-IqF" id="aHv-t4-hpT">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="89"/>
@@ -1051,7 +1052,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="buttonsCell" rowHeight="90" id="5ha-K4-616" customClass="ButtonsCell">
-                                <rect key="frame" x="0.0" y="861" width="768" height="90"/>
+                                <rect key="frame" x="0.0" y="927" width="768" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5ha-K4-616" id="hpC-Up-IIR">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="90"/>
@@ -1095,7 +1096,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ExtenderCell" rowHeight="60" id="By8-Nt-E8f" customClass="ExtenderCell">
-                                <rect key="frame" x="0.0" y="951" width="768" height="60"/>
+                                <rect key="frame" x="0.0" y="1017" width="768" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="By8-Nt-E8f" id="Dgb-R8-qRA">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="60"/>
@@ -1150,7 +1151,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TemperatureExtenderCell" rowHeight="73" id="CZh-vQ-nDZ" customClass="TemperatureExtenderCell">
-                                <rect key="frame" x="0.0" y="1011" width="768" height="73"/>
+                                <rect key="frame" x="0.0" y="1077" width="768" height="73"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CZh-vQ-nDZ" id="HZs-YE-45m">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="73"/>
@@ -1222,7 +1223,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="InputExtenderCell" rowHeight="73" id="lt2-oE-HRw" customClass="InputExtenderCell">
-                                <rect key="frame" x="0.0" y="1084" width="768" height="73"/>
+                                <rect key="frame" x="0.0" y="1150" width="768" height="73"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lt2-oE-HRw" id="KYM-5O-gF1">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="73"/>
@@ -1294,7 +1295,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="OutputExtenderCell" rowHeight="73" id="JkL-JV-VCb" customClass="OutputExtenderCell">
-                                <rect key="frame" x="0.0" y="1157" width="768" height="73"/>
+                                <rect key="frame" x="0.0" y="1223" width="768" height="73"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JkL-JV-VCb" id="6lC-Pe-Sut">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="73"/>
@@ -1362,7 +1363,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BMV+MultiCell" rowHeight="308" id="zj7-FA-jn5" customClass="BMV_MultiCell">
-                                <rect key="frame" x="0.0" y="1230" width="768" height="308"/>
+                                <rect key="frame" x="0.0" y="1296" width="768" height="308"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zj7-FA-jn5" id="MEz-ZK-cUc">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="308"/>
@@ -1641,7 +1642,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BMV+Multi+MPPTCell" rowHeight="310" id="WXV-Ul-Rv1" customClass="BMV_Multi_MPPTCell">
-                                <rect key="frame" x="0.0" y="1538" width="768" height="310"/>
+                                <rect key="frame" x="0.0" y="1604" width="768" height="310"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WXV-Ul-Rv1" id="ali-vc-K4K">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="310"/>
@@ -1953,7 +1954,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BMV+Multi+PVICell" rowHeight="298" id="m3c-4o-eze" customClass="BMV_Multi_PVICell">
-                                <rect key="frame" x="0.0" y="1848" width="768" height="298"/>
+                                <rect key="frame" x="0.0" y="1914" width="768" height="298"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="m3c-4o-eze" id="08i-fQ-jTa">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="298"/>
@@ -2277,7 +2278,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="BMV+MPPTCell" rowHeight="187" id="lrS-Cz-utV" customClass="BMV_MPPTCell">
-                                <rect key="frame" x="0.0" y="2146" width="768" height="187"/>
+                                <rect key="frame" x="0.0" y="2212" width="768" height="187"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lrS-Cz-utV" id="P7v-ba-P1v">
                                     <rect key="frame" x="0.0" y="0.0" width="768" height="187"/>
@@ -2569,10 +2570,10 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SitesOKCell" rowHeight="120" id="CnP-dC-cDm" customClass="SitesOKCell">
-                                <rect key="frame" x="0.0" y="186" width="320" height="90"/>
+                                <rect key="frame" x="0.0" y="186" width="320" height="120"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CnP-dC-cDm" id="jND-na-dwz">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f3C-XO-AeT">
@@ -2657,7 +2658,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="gray" indentationWidth="10" reuseIdentifier="SitesOutDatedCell" rowHeight="70" id="Uhl-Ak-rce" customClass="SitesOutDatedCell">
-                                <rect key="frame" x="0.0" y="276" width="320" height="70"/>
+                                <rect key="frame" x="0.0" y="306" width="320" height="70"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uhl-Ak-rce" id="5cs-7w-His">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
@@ -2694,7 +2695,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoSitesAvailableCell" rowHeight="175" id="b4i-YH-jzv" customClass="NoSitesAvailableCell">
-                                <rect key="frame" x="0.0" y="346" width="320" height="175"/>
+                                <rect key="frame" x="0.0" y="376" width="320" height="175"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b4i-YH-jzv" id="pcW-7f-01G">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="175"/>
@@ -2748,7 +2749,7 @@
                     <connections>
                         <outlet property="searchDisplayController" destination="DPc-Cg-Cyu" id="cfB-Q9-LSa"/>
                         <outlet property="sitesSearchBar" destination="HJs-ra-8kI" id="dvR-Ov-uo5"/>
-                        <segue destination="r2A-Rv-2eI" kind="modal" identifier="loginSegue" modalPresentationStyle="fullScreen" animates="NO" id="hqL-sR-PZj"/>
+                        <segue destination="r2A-Rv-2eI" kind="modal" identifier="loginSegue" animates="NO" modalPresentationStyle="fullScreen" id="hqL-sR-PZj"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BvK-X1-4Bo" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3228,7 +3229,7 @@
                                 <rect key="frame" x="0.0" y="22" width="768" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8IC-7t-b1u" id="70n-7v-Q4s">
-                                    <rect key="frame" x="0.0" y="0.0" width="729" height="59"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="676" height="59"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JJa-0K-6ud">
@@ -3995,11 +3996,6 @@
         <image name="solar_battery.png" width="61" height="82"/>
         <image name="warning.png" width="125" height="125"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
-    </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="hqL-sR-PZj"/>
     </inferredMetricsTieBreakers>

@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "4D617DBFBE1DA81A8C5D644185D47061A4403D96",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "3F43BB56AEE039E6D7C4C88F82369EE947F97729" : 0,
+    "4D617DBFBE1DA81A8C5D644185D47061A4403D96" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "142871AB-7F69-4C2F-B726-DA2D0C3F1D61",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "3F43BB56AEE039E6D7C4C88F82369EE947F97729" : "victron",
+    "4D617DBFBE1DA81A8C5D644185D47061A4403D96" : "apps_vrm_ios"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "VictronEnergy",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "VictronEnergy.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh:\/\/israfel.m2mobi.com\/victron\/iphone\/victron.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3F43BB56AEE039E6D7C4C88F82369EE947F97729"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/victronenergy\/apps_vrm_ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4D617DBFBE1DA81A8C5D644185D47061A4403D96"
+    }
+  ]
+}
