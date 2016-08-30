@@ -211,7 +211,7 @@
 	[super viewWillAppear:animated];
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self.navigationController setToolbarHidden:YES animated:animated];
+//        [self.navigationController setToolbarHidden:YES animated:animated];
     }
 }
 
@@ -219,7 +219,7 @@
     [super viewWillDisappear:animated];
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self.navigationController setToolbarHidden:NO animated:animated];
+//        [self.navigationController setToolbarHidden:NO animated:animated];
     }
 }
 
@@ -263,18 +263,13 @@
         if(self.availableActions == 0) {
             toolbarWidth = 200.0f;
             items = [NSArray arrayWithObjects:
-                     fixedSpace,
                      refreshStopBarButtonItem,
-                     fixedSpace,
                      nil];
         } else {
             fixedSpace.width = 30.0f;
             items = [NSArray arrayWithObjects:
-                     fixedSpace,
                      self.actionBarButtonItem,
-                     fixedSpace,
                      refreshStopBarButtonItem,
-                     fixedSpace,
                      nil];
         }
 
