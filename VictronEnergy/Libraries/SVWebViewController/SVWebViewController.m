@@ -73,7 +73,6 @@
 }
 
 - (UIBarButtonItem *)forwardBarButtonItem {
-    
     if (!forwardBarButtonItem) {
         forwardBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"SVWebViewController.bundle/iPhone/forward"] style:UIBarButtonItemStylePlain target:self action:@selector(goForwardClicked:)];
 		forwardBarButtonItem.width = 18.0f;
@@ -258,7 +257,6 @@
     fixedSpace.width = 5.0f;
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         NSArray *items;
         CGFloat toolbarWidth = 250.0f;
 
@@ -267,10 +265,6 @@
             items = [NSArray arrayWithObjects:
                      fixedSpace,
                      refreshStopBarButtonItem,
-                     flexibleSpace,
-                     self.backBarButtonItem,
-                     flexibleSpace,
-                     self.forwardBarButtonItem,
                      fixedSpace,
                      nil];
         } else {
@@ -278,10 +272,6 @@
             items = [NSArray arrayWithObjects:
                      fixedSpace,
                      self.actionBarButtonItem,
-                     fixedSpace,
-                     self.forwardBarButtonItem,
-                     fixedSpace,
-                     self.backBarButtonItem,
                      fixedSpace,
                      refreshStopBarButtonItem,
                      fixedSpace,
@@ -298,42 +288,6 @@
         toolbar.translucent = NO;
         toolbar.clipsToBounds = YES;
         self.navigationItem.rightBarButtonItems = items;
-    }
-    else {
-        NSArray *items;
-
-        if(self.availableActions == 0) {
-            items = [NSArray arrayWithObjects:
-                     flexibleSpace,
-                     self.backBarButtonItem,
-                     flexibleSpace,
-                     self.forwardBarButtonItem,
-                     flexibleSpace,
-                     refreshStopBarButtonItem,
-                     flexibleSpace,
-                     nil];
-        } else {
-            items = [NSArray arrayWithObjects:
-                     fixedSpace,
-                     self.backBarButtonItem,
-                     flexibleSpace,
-                     self.forwardBarButtonItem,
-                     flexibleSpace,
-                     refreshStopBarButtonItem,
-                     flexibleSpace,
-                     self.actionBarButtonItem,
-                     fixedSpace,
-                     nil];
-        }
-
-        self.navigationController.toolbar.barStyle = self.navigationController.navigationBar.barStyle;
-        self.navigationController.toolbar.tintColor = COLOR_NAV_BAR;
-        if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1) {
-            self.navigationController.toolbar.barTintColor = COLOR_NAV_BAR;
-        }
-        self.navigationController.toolbar.translucent = NO;
-        self.toolbarItems = items;
-    }
 }
 
 #pragma mark -
@@ -398,11 +352,7 @@
     if(pageActionSheet)
         return;
 
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        [self.pageActionSheet showFromBarButtonItem:self.actionBarButtonItem animated:YES];
-    else
-        [self.pageActionSheet showFromToolbar:self.navigationController.toolbar];
-
+    [self.pageActionSheet showFromBarButtonItem:self.actionBarButtonItem animated:YES];
 }
 
 - (void)doneButtonClicked:(id)sender {
