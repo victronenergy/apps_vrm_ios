@@ -73,7 +73,7 @@
 }
 
 - (UIBarButtonItem *)forwardBarButtonItem {
-
+    
     if (!forwardBarButtonItem) {
         forwardBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"SVWebViewController.bundle/iPhone/forward"] style:UIBarButtonItemStylePlain target:self action:@selector(goForwardClicked:)];
 		forwardBarButtonItem.width = 18.0f;
@@ -212,7 +212,7 @@
 	[super viewWillAppear:animated];
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self.navigationController setToolbarHidden:NO animated:animated];
+        [self.navigationController setToolbarHidden:YES animated:animated];
     }
 }
 
@@ -220,7 +220,7 @@
     [super viewWillDisappear:animated];
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self.navigationController setToolbarHidden:YES animated:animated];
+        [self.navigationController setToolbarHidden:NO animated:animated];
     }
 }
 
