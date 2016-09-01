@@ -159,12 +159,8 @@ const float kSearchBarHeight = 44.0f;
             [self performSegueWithIdentifier:@"loginSegue" sender:self];
         }];
     }else{
-        [self reloadIfNeeded];
+        [self reloadTableViewDataSource];
     }
-    
-    NSLog(@"site list table appear");
-    [self reloadTableViewDataSource];
-
 }
 
 - (void)reloadIfNeeded
@@ -450,6 +446,7 @@ const float kSearchBarHeight = 44.0f;
             weakSelf.scrollViewController.sitesList = weakSelf.sitesList;
         }
     } failure:^(NSInteger statusCode) {
+        NSLog(@"getSites SiteListTableViewController. Status: %ld", (long)statusCode);
         [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
     }];
 }
@@ -484,7 +481,6 @@ const float kSearchBarHeight = 44.0f;
     }
 
 }
-
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
@@ -790,6 +786,7 @@ const float kSearchBarHeight = 44.0f;
         }
     } failure:^(NSInteger statusCode) {
         siteInfo.isLoadingWidgets = NO;
+        NSLog(@"getAttributesForSite SiteListTableViewController. Status: %ld", (long)statusCode);
         [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
     }];
 }

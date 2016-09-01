@@ -25,6 +25,8 @@ NSString *const kM2MOkButtonTitle = @"Ok";
     if (statusCode == RETURN_CODE_OK) {
         return nil;
     }
+    
+    NSLog(@"Status code received: %d", statusCode);
 
     if ([Data sharedData].isAnAlertViewShowing) {
         return nil;

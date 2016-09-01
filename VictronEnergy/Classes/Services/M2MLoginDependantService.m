@@ -19,6 +19,7 @@
 
 - (void)performWithSuccess:(void (^)(id))success failure:(void (^)(NSInteger))failure arguments:arguments
 {
+    NSLog(@"Perform With Success");
     //Try to do the perform the service
     [self performConcreteServiceWithSuccess:success failure:^(NSInteger statusCode) {
         if (statusCode == RETURN_CODE_SESSION_EXPIRED) {
@@ -27,6 +28,7 @@
                 //Retry perform
                 [self performWithSuccess:success failure:failure arguments:arguments];
             } failure:^(NSInteger statusCode) {
+                NSLog(@"LoginDependantService Login Failed: %ldl", (long) statusCode);
                 failure(statusCode);
             }];
         } else {
