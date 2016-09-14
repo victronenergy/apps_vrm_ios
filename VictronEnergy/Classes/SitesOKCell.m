@@ -74,7 +74,9 @@
     if ([self.widgetsArray count] > 0) {
         return [self.widgetsArray count];
     }
-    return 0;
+    
+    //If no widgets are present, make sure to display at least one page of empty widgets to allow the user to click on the entire summary instead of just the title
+    return 3;
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -83,6 +85,8 @@
     
     if ([self.widgetsArray count] > 0) {
         [cell setDataWithSummaryWidget:[self.widgetsArray objectAtIndex:indexPath.row] andIsLoading:self.isLoading];
+    } else {
+        [cell setDataWithSummaryWidget:nil andIsLoading:false];
     }
 
     return cell;
