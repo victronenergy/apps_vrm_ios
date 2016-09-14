@@ -22,7 +22,7 @@
 
     } else {
         self.summeryValueImageView.image = nil;
-        self.summaryNameLabel.text = nil;
+        self.summaryNameLabel.text = @"";
 
         if (isLoading) {
             UIActivityIndicatorView *progress= [[UIActivityIndicatorView alloc] initWithFrame:self.summeryValueImageView.frame];
@@ -32,7 +32,8 @@
 
             self.summaryValueLabel.text = NSLocalizedString(@"widget_loading", @"widget_loading");
         } else {
-            self.summaryValueLabel.text = NSLocalizedString(@"widget_no_data", @"widget_no_data");
+//            self.summaryValueLabel.text = NSLocalizedString(@"widget_no_data", @"widget_no_data");
+            self.summaryValueLabel.text = @"";
         }
     }
 }
