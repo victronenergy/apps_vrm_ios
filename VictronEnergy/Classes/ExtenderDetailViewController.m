@@ -110,7 +110,7 @@
 
     self.pngData = UIImagePNGRepresentation(image);
 
-    [picker dismissModalViewControllerAnimated:YES];
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *) picker
