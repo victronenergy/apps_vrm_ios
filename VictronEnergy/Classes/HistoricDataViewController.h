@@ -63,6 +63,7 @@
 
 
 @property (weak, nonatomic) IBOutlet UIView *boxView;
+@property (weak, nonatomic) IBOutlet UIView *backgroundBorderView;
 @property (nonatomic, weak) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *headerBackground;
 
