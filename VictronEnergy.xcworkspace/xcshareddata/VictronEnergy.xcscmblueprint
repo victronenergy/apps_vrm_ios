@@ -10,7 +10,7 @@
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "142871AB-7F69-4C2F-B726-DA2D0C3F1D61",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "3F43BB56AEE039E6D7C4C88F82369EE947F97729" : "victron",
-    "4D617DBFBE1DA81A8C5D644185D47061A4403D96" : "apps_vrm_ios"
+    "4D617DBFBE1DA81A8C5D644185D47061A4403D96" : "apps_vrm_ios\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "VictronEnergy",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
