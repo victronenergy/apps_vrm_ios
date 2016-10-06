@@ -62,7 +62,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *maxsvValueLabel;
 
 
-@property (weak, nonatomic) IBOutlet UIView *backgroundBorderView;
+@property (weak, nonatomic) IBOutlet UIView *boxView;
 @property (nonatomic, weak) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *headerBackground;
 

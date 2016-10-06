@@ -35,18 +35,18 @@
     self.navigationItem.title = NSLocalizedString(@"historic_data_title", @"historic_data_title");
     self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"back_button_title", @"back_button_title");
 
-    [self.scroller setScrollEnabled:YES];
-    [self.scroller setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [self.scroller setContentSize:CGSizeMake(self.view.frame.size.width, 720)];
+    [self updateScrollViewLayout];
 
-    self.backgroundBorderView.layer.borderColor = [COLOR_LINE CGColor];
-    self.backgroundBorderView.layer.borderWidth = 1.0f;
+    //CHANGE: removed border for the redundant background view
+//    self.backgroundBorderView.layer.borderColor = [COLOR_LINE CGColor];
+//    self.backgroundBorderView.layer.borderWidth = 1.0f;
 
     self.nameLabel.text = self.selectedSite.name;
 
     self.headerBackground.image = [[UIImage imageNamed:@"heading_corner.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(kHeaderInsetImageTop, kHeaderInsetImageLeft, kHeaderInsetImageBottom, kHeaderInsetImageRight)];
 
     [self getSiteAttributesForHistoricData];
+    
 
     [Tools style:LabelStyleSectionHeader forLabel:self.nameLabel];
     [Tools style:LabelStyleHistoricDataTitle forLabel:self.ddNameLabel];
@@ -90,9 +90,11 @@
     __weak HistoricDataViewController *weakSelf = self;
 
     [[M2MHistoricDataService new] loadHistoricDataWithSiteID:self.selectedSite.siteID instanceNumber:self.selectedSite.instanceNumber success:^(AttributesInfo *attributesInfo) {
+        NSLog(@"Attribute Info %@", attributesInfo);
         weakSelf.siteHistoricAttributesInfo = attributesInfo;
         [weakSelf reloadViewWithData];
     } failure:^(NSInteger statusCode) {
+        NSLog(@"%ld", (long)statusCode);
         [M2MNetworkErrorHandler checkToShowAlertViewForResponseCode:statusCode];
     }];
 }
@@ -104,6 +106,8 @@
 
     HistoricDataInfo *info = [[HistoricDataInfo alloc] initWithAttributesInfo:self.siteHistoricAttributesInfo];
 
+    NSLog(@"Reload w Data %@", info.deepestDischarge);
+    
     self.ddValueLabel.text = info.deepestDischarge;
     self.ldValueLabel.text =  info.lastDischarge;
     self.adValueLabel.text = info.averageDischarge;
@@ -120,6 +124,23 @@
     self.hsvaValueLabel.text = info.highStarterVoltageAlarms;
     self.minsvValueLabel.text = info.minimumStarterVoltage;
     self.maxsvValueLabel.text = info.maximumStarterVoltage;
+    
+    NSLog(@"Label values: %@", self.ddValueLabel.text);
+}
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [self updateScrollViewLayout];
+}
+
+//Update the scrollview and contentview width and height to adjust it to the current device orientation
+-(void)updateScrollViewLayout
+{
+    [self.scroller setScrollEnabled:YES];
+    [self.scroller setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [self.boxView setFrame:CGRectMake(0,0, self.view.frame.size.width, 720)];
+    [self.scroller setContentSize:CGSizeMake(self.view.frame.size.width, 720)];
+    self.scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 - (BOOL)shouldAutorotate {
