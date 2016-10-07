@@ -92,6 +92,7 @@
     [[M2MHistoricDataService new] loadHistoricDataWithSiteID:self.selectedSite.siteID instanceNumber:self.selectedSite.instanceNumber success:^(AttributesInfo *attributesInfo) {
         NSLog(@"Attribute Info %@", attributesInfo);
         weakSelf.siteHistoricAttributesInfo = attributesInfo;
+        [weakSelf updateScrollViewLayout];
         [weakSelf reloadViewWithData];
     } failure:^(NSInteger statusCode) {
         NSLog(@"%ld", (long)statusCode);
@@ -138,7 +139,7 @@
 {
     [self.scroller setScrollEnabled:YES];
     [self.scroller setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [self.boxView setFrame:CGRectMake(0,0, self.view.frame.size.width - 20, 720)];
+    [self.boxView setFrame:CGRectMake(10,10, self.view.frame.size.width - 20, 720)];
     [self.scroller setContentSize:CGSizeMake(self.view.frame.size.width - 20, 720)];
     self.scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
