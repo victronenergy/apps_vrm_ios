@@ -504,7 +504,7 @@
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" id="hjD-sf-1ps">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" id="hjD-sf-1ps">
                                 <frame key="frameInset" width="375"/>
                                 <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
                                 <subviews>
@@ -516,8 +516,8 @@
                                                 <frame key="frameInset" height="60"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="av0-sJ-Yse">
-                                                <frame key="frameInset" minX="46" minY="17" width="282" height="21"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="av0-sJ-Yse">
+                                                <frame key="frameInset" minX="20" minY="20" width="325" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -752,6 +752,7 @@
                                         <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="10"/>
                                     </view>
                                 </subviews>
+                                <inset key="contentInset" minX="10" minY="10" maxX="10" maxY="0.0"/>
                                 <connections>
                                     <outlet property="delegate" destination="9gR-2W-ijC" id="lMc-4E-1MX"/>
                                 </connections>
@@ -2172,7 +2173,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="mEw-r1-KNz">
-                                                            <rect key="frame" x="0.0" y="0.0" width="640" height="960"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="960" height="1440"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <gestureRecognizers/>
                                                         </imageView>
@@ -2547,7 +2548,7 @@
                                 <rect key="frame" x="0.0" y="22" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zWm-mm-Xct" id="vKr-Df-UiF">
-                                    <frame key="frameInset" width="336" height="59"/>
+                                    <frame key="frameInset" width="335" height="60"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" id="4yo-Yp-ffG">

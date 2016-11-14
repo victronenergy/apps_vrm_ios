@@ -139,7 +139,13 @@
 {
     [self.scroller setScrollEnabled:YES];
     [self.scroller setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [self.boxView setFrame:CGRectMake(10,10, self.view.frame.size.width - 20, 720)];
+    
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) {
+        [self.boxView setFrame:CGRectMake(10,10, self.view.frame.size.width - 20, 720)];
+    } else {
+        [self.boxView setFrame:CGRectMake(0, 0, self.view.frame.size.width - 20, 720)];
+    }
+    
     [self.scroller setContentSize:CGSizeMake(self.view.frame.size.width - 20, 720)];
     self.scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
