@@ -271,11 +271,14 @@ typedef enum ScrollDirection {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%li",WEBVIEW_URL_REQUEST_SITE, (long)self.selectedSite.siteID]];
     NSString *body = [NSString stringWithFormat: @"username=%@&password=%@",username,password];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL: url];
-    [request setHTTPMethod: @"POST"];
+    [request setHTTPMethod: @"GET"];
     [request setHTTPBody: [body dataUsingEncoding: NSUTF8StringEncoding]];
 
     SVWebViewController *webViewController = [[SVWebViewController alloc] initWithURLRequest:request];
     webViewController.title = self.selectedSite.name;
+    
+    NSString *path = [NSString stringWithFormat:@"/installation/%ld/dashboard", (long)self.selectedSite.siteID];
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:path controller:self];
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [self.navigationController pushViewController:webViewController animated:YES];
@@ -295,7 +298,6 @@ typedef enum ScrollDirection {
                                                            label:@"website_alarms_button"
                                                            value:nil] build]];
 }
-
 
 - (void)backFromWebview
 {

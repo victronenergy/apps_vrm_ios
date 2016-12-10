@@ -24,6 +24,9 @@
 @property (nonatomic, strong) NSURL *URL;
 @property (nonatomic, strong) NSURLRequest *URLRequest;
 @property (nonatomic) bool done;
+@property (nonatomic) bool shouldRedirect;
+@property (nonatomic) NSString *currentToken;
+@property (nonatomic) NSString *currentRedirect;
 
 - (id)initWithAddress:(NSString*)urlString;
 - (id)initWithURL:(NSURL*)URL;
@@ -298,12 +301,26 @@
 
 - (void)setToken:(NSString *)token redirect:(NSString *) path{
     NSLog(@"Setting token on the webview");
+
+    _currentToken = token;
+    _shouldRedirect = true;
+    _currentRedirect = path;
     
-    NSString *js = [NSString stringWithFormat: @"localStorage.setItem('vrm.acc.storage.token', '%@'); window.location.href = '%@';", token, path];
+    // If done -> set token immediately
+    if (_done)
+    {
+        [self handleCurrentToken];
+    }
+}
+
+-(void)handleCurrentToken {
+    if (_shouldRedirect)
+    {
+        NSString *js = [NSString stringWithFormat: @"localStorage.setItem('vrm.prod.storage.token', '%@'); window.location.href = '%@';", _currentToken, _currentRedirect];
+        [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
+        _shouldRedirect = false;
+    }
     
-    [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
-    
-    _done = TRUE;
 }
 
 - (bool)isDone {
@@ -311,36 +328,29 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+    _done = true;
     
     M2MCredentialsStorage *credentialsStorage = [M2MCredentialsStorage new];
     M2MCredentials *credentials = [credentialsStorage getCurrentUserCredentials];
     
     NSString *username = credentials.username;
     
-    if ([[(AppDelegate *)[[UIApplication sharedApplication] delegate] globalEmail] isEqualToString:username]) {
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            if (!_done) {
-                NSLog(@"Removing Token");
-                NSString *js = [NSString stringWithFormat: @"localStorage.removeItem('vrm.acc.storage.token'); window.location.href = '/';"];
-                
-                [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
-                
-                _done = TRUE;
-            }
-        });
-    } else {
-        if (!_done) {
-            NSLog(@"Removing Token");
-            NSString *js = [NSString stringWithFormat: @"localStorage.removeItem('vrm.acc.storage.token'); window.location.href = '/';"];
-            
-            [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
-            
-            _done = TRUE;
-        }
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    if (![delegate.globalEmail isEqualToString:username]) {
+        NSLog(@"Removing Token");
+        NSString *js = [NSString stringWithFormat: @"localStorage.removeItem('vrm.prod.storage.token'); window.location.href = '/';"];
+        
+        [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
+        delegate.globalEmail = username;
+    }
+
+    if (self.currentToken != nil)
+    {
+        [self handleCurrentToken];
     }
     
-	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     [SVProgressHUD dismiss];
 

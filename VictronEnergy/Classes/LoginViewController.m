@@ -88,23 +88,24 @@
 }
 
 - (IBAction)forgotPasswordButtonPressed:(id)sender {
-    if ([Tools validateEmail:self.emailTextField.text]) {
-        NSString *fullURL = [NSString stringWithFormat:@"https://vrm.victronenergy.com/user/reset-password-request/email/%@" ,self.emailTextField.text];
-
-        NSURL *url = [NSURL URLWithString:fullURL];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL: url];
-
-        SVWebViewController *webViewController = [[SVWebViewController alloc] initWithURLRequest:request];
-        [self.navigationController pushViewController:webViewController animated:YES];
-    }else{
-        UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:NSLocalizedString(@"no_email_title", @"no_email_title")
-                              message:NSLocalizedString(@"no_email_message", @"no_email_message")
-                              delegate:self
-                              cancelButtonTitle:NSLocalizedString(@"error_message_cancel_button", @"error_message_cancel_button")
-                              otherButtonTitles:nil];
-        [alert show];
-    }
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://vrm.victronenergy.com/forgot-password"]];
+//    if ([Tools validateEmail:self.emailTextField.text]) {
+//        NSString *fullURL = [NSString stringWithFormat:@"https://acceptancevrm.victronenergy.com/forgot-password" ,self.emailTextField.text];
+//
+//        NSURL *url = [NSURL URLWithString:fullURL];
+//        NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL: url];
+//
+//        SVWebViewController *webViewController = [[SVWebViewController alloc] initWithURLRequest:request];
+//        [self.navigationController pushViewController:webViewController animated:YES];
+//    }else{
+//        UIAlertView *alert = [[UIAlertView alloc]
+//                              initWithTitle:NSLocalizedString(@"no_email_title", @"no_email_title")
+//                              message:NSLocalizedString(@"no_email_message", @"no_email_message")
+//                              delegate:self
+//                              cancelButtonTitle:NSLocalizedString(@"error_message_cancel_button", @"error_message_cancel_button")
+//                              otherButtonTitles:nil];
+//        [alert show];
+//    }
 }
 
 - (IBAction)demoButtonPressed:(id)sender {
