@@ -419,7 +419,7 @@ const float kSearchBarHeight = 44.0f;
                 [self storeUserEmail:username];
                 
                 NSString *token = [responseDict valueForKey:@"token"];
-                [webview setToken:token];
+                [webview setToken:token redirect:@"/"];
                 NSLog(@"Received Token: %@", token);
             }
         }
@@ -463,7 +463,7 @@ const float kSearchBarHeight = 44.0f;
                 [self storeUserEmail:username];
                 
                 NSString *token = [responseDict valueForKey:@"token"];
-                [webview setToken:token];
+                [webview setToken:token redirect:@"/"];
                 NSLog(@"Received Token: %@", token);
             }
         }

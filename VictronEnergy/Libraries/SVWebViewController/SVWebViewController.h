@@ -15,7 +15,7 @@
 - (id)initWithAddress:(NSString*)urlString;
 - (id)initWithURL:(NSURL*)URL;
 - (id)initWithURLRequest:(NSURLRequest*)URLRequest;
-- (void)setToken:(NSString*)token;
+- (void)setToken:(NSString*)token redirect:(NSString*)path;
 - (bool)isDone;
 @property (nonatomic, readwrite) SVWebViewControllerAvailableActions availableActions;
 

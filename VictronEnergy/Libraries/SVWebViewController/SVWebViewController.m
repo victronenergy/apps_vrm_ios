@@ -296,10 +296,10 @@
     [SVProgressHUD show];
 }
 
-- (void)setToken:(NSString *)token {
+- (void)setToken:(NSString *)token redirect:(NSString *) path{
     NSLog(@"Setting token on the webview");
     
-    NSString *js = [NSString stringWithFormat: @"localStorage.setItem('vrm.acc.storage.token', '%@'); window.location.href = '/';", token];
+    NSString *js = [NSString stringWithFormat: @"localStorage.setItem('vrm.acc.storage.token', '%@'); window.location.href = '%@';", token, path];
     
     [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
     
