@@ -8,6 +8,8 @@
 
 #import "SVWebViewController.h"
 #import "SVProgressHUD.h"
+#import "M2MCredentials.h"
+#import "M2MCredentialsStorage.h"
 
 @interface SVWebViewController () <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
@@ -21,7 +23,7 @@
 @property (nonatomic, strong) UIWebView *mainWebView;
 @property (nonatomic, strong) NSURL *URL;
 @property (nonatomic, strong) NSURLRequest *URLRequest;
-
+@property (nonatomic) bool done;
 
 - (id)initWithAddress:(NSString*)urlString;
 - (id)initWithURL:(NSURL*)URL;
@@ -294,10 +296,52 @@
     [SVProgressHUD show];
 }
 
+- (void)setToken:(NSString *)token {
+    NSLog(@"Setting token on the webview");
+    
+    NSString *js = [NSString stringWithFormat: @"localStorage.setItem('vrm.acc.storage.token', '%@'); window.location.href = '/';", token];
+    
+    [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
+    
+    _done = TRUE;
+}
+
+- (bool)isDone {
+    return self.done;
+}
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+    
+    M2MCredentialsStorage *credentialsStorage = [M2MCredentialsStorage new];
+    M2MCredentials *credentials = [credentialsStorage getCurrentUserCredentials];
+    
+    NSString *username = credentials.username;
+    
+    if ([[(AppDelegate *)[[UIApplication sharedApplication] delegate] globalEmail] isEqualToString:username]) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            if (!_done) {
+                NSLog(@"Removing Token");
+                NSString *js = [NSString stringWithFormat: @"localStorage.removeItem('vrm.acc.storage.token'); window.location.href = '/';"];
+                
+                [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
+                
+                _done = TRUE;
+            }
+        });
+    } else {
+        if (!_done) {
+            NSLog(@"Removing Token");
+            NSString *js = [NSString stringWithFormat: @"localStorage.removeItem('vrm.acc.storage.token'); window.location.href = '/';"];
+            
+            [self.mainWebView stringByEvaluatingJavaScriptFromString:js];
+            
+            _done = TRUE;
+        }
+    }
+    
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-
+    
     [SVProgressHUD dismiss];
 
     [self updateToolbarItems];

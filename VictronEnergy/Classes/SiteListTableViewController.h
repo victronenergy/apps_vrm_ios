@@ -54,6 +54,7 @@
 - (void)doneLoadingTableViewData;
 - (void)loadFirstSiteDetailView;
 - (void)scrollSiteListToSite:(int)sitePositionInSiteDetails withDuration:(float)duration;
+- (void)storeUserEmail:(NSString *)email;
 
 @end
 

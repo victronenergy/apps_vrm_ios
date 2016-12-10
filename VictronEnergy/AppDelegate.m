@@ -25,6 +25,8 @@
 
     [[UINavigationBar appearance]setBarTintColor:COLOR_NAV_BAR];
     [[UINavigationBar appearance]setTintColor:COLOR_DARK_GREY];
+    
+    self.globalEmail = [[NSMutableString alloc] init];
 
     // Optional: automatically send uncaught exceptions to Google Analytics.
     [GAI sharedInstance].trackUncaughtExceptions = YES;

@@ -348,16 +348,25 @@ const float kSearchBarHeight = 44.0f;
 
     NSString *username = credentials.username;
     NSString *password = credentials.password;
-
+    
     NSURL *url = WEBVIEW_URL_REQUEST;
     NSString *body = [NSString stringWithFormat: @"username=%@&password=%@",username,password];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL: url];
-    [request setHTTPMethod: @"POST"];
+    [request setHTTPMethod: @"GET"];
     [request setHTTPBody: [body dataUsingEncoding: NSUTF8StringEncoding]];
 
     SVWebViewController *webViewController = [[SVWebViewController alloc] initWithURLRequest:request];
     webViewController.title = NSLocalizedString(@"website_title", @"website_title");
 
+    if ([[(AppDelegate *)[[UIApplication sharedApplication] delegate] globalEmail] isEqualToString:username]) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [self requestToken:username password:password web:webViewController];
+        });
+    } else {
+        [self requestToken:username password:password web:webViewController];
+    }
+    
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [self.navigationController pushViewController:webViewController animated:YES];
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -374,6 +383,126 @@ const float kSearchBarHeight = 44.0f;
                                                           action:GA_WITH_ACTION_BUTTON_PRESS
                                                            label:@"settings_website_button"
                                                            value:nil] build]];
+}
+
+- (void)requestToken:(NSString*)username password:(NSString*)password web:(SVWebViewController *) webview{
+    
+    NSLog(@"Token request %@ %@", username, password);
+    
+    NSMutableDictionary *requestParameters = [[NSMutableDictionary alloc] init];
+    [requestParameters setValue:username forKey:@"username"];
+    [requestParameters setValue:password forKey:@"password"];
+    
+    NSLog(@"Token params: %@", requestParameters);
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    [manager POST:WEBVIEW_URL_LOGIN_REQUEST parameters:requestParameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //TODO: Test API and see if this alert is really needed in the success block
+        if ([responseObject isKindOfClass:[NSArray class]]) {
+            NSLog(@"Weird array response");
+        } else if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *responseDict = responseObject;
+            
+            if ([responseDict valueForKey:@"verification_sent"]) {
+                NSLog(@"Two factor auth is enabled");
+                [self showTwoFactorDialog:username password:password web:webview];
+            } else {
+                NSLog(@"Successful login");
+                
+                [self storeUserEmail:username];
+                
+                NSString *token = [responseDict valueForKey:@"token"];
+                [webview setToken:token];
+                NSLog(@"Received Token: %@", token);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Token Request Failed: %@", error);
+    }];
+}
+
+- (void)requestTwoFactorToken:(NSString *)username password:(NSString *)password code:(NSString *)code web:(SVWebViewController *) webview{
+    
+    NSLog(@"Token request %@ %@", username, password);
+    
+    NSMutableDictionary *requestParameters = [[NSMutableDictionary alloc] init];
+    [requestParameters setValue:username forKey:@"username"];
+    [requestParameters setValue:password forKey:@"password"];
+    [requestParameters setValue:code forKey:@"sms_token"];
+    
+    NSLog(@"Token params: %@", requestParameters);
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    //    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    [manager POST:WEBVIEW_URL_LOGIN_REQUEST parameters:requestParameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //TODO: Test API and see if this alert is really needed in the success block
+        if ([responseObject isKindOfClass:[NSArray class]]) {
+            NSLog(@"Weird array response");
+        } else if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *responseDict = responseObject;
+            
+            if ([responseDict valueForKey:@"verification_sent"]) {
+                NSLog(@"Two factor auth is enabled");
+                [self showTwoFactorDialog:username password:password web:webview];
+            } else {
+                NSLog(@"Successful login");
+                
+                [self storeUserEmail:username];
+                
+                NSString *token = [responseDict valueForKey:@"token"];
+                [webview setToken:token];
+                NSLog(@"Received Token: %@", token);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Token Request Failed: %@", error);
+    }];
+}
+
+- (void)storeUserEmail:(NSString *)email {
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    delegate.globalEmail = email;
+}
+
+- (void)showTwoFactorDialog:(NSString *)username password:(NSString *)password web:(SVWebViewController *) webview{
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"Verification"
+                                                                              message: @"Enter the code sent to you via SMS in the field below"
+                                                                       preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"Verification Code";
+        textField.textColor = [UIColor blueColor];
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.borderStyle = UITextBorderStyleRoundedRect;
+    }];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSArray * textfields = alertController.textFields;
+        UITextField * textfield = textfields[0];
+        
+        NSString *code = textfield.text;
+        
+        if (![code  isEqual: @""]) {
+            [self requestTwoFactorToken:username password:password code:code web:webview];
+        } else {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }]];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)backFromWebview

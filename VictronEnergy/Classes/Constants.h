@@ -128,9 +128,9 @@
 #define LOGIN_DEMO_EMAIL                                @"demo@victronenergy.com"
 #define LOGIN_DEMO_PASSWORD                             @"vrmdemo"
 
-#define WEBVIEW_URL_REQUEST                            [NSURL URLWithString:@"https://vrm.victronenergy.com/user/login"]
-#define WEBVIEW_URL_REQUEST_SITE                       @"https://vrm.victronenergy.com/user/login?return=%2Fsite%2F"
-
+#define WEBVIEW_URL_REQUEST                            [NSURL URLWithString:@"https://acceptancevrm.victronenergy.com/"]
+#define WEBVIEW_URL_REQUEST_SITE                       @"https://acceptancevrm.victronenergy.com/user/login?return=%2Fsite%2F"
+#define WEBVIEW_URL_LOGIN_REQUEST                      @"https://acceptancevrmapi.victronenergy.com/v2/auth/login"
 
 #define RETURN_CODE_OK                                 200
 #define RETURN_CODE_SESSION_EXPIRED                    401
