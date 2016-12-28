@@ -1307,9 +1307,9 @@
 				0800131A16E5DF2400D4F928 /* Sources */,
 				0800131B16E5DF2400D4F928 /* Frameworks */,
 				0800131C16E5DF2400D4F928 /* Resources */,
-				07B126221B68C7810037CB8B /* ShellScript */,
 				B24DA487B7A7EC80116B546D /* [CP] Embed Pods Frameworks */,
 				63A11B34BB414D8CE8FC7DE9 /* [CP] Copy Pods Resources */,
+				07B126221B68C7810037CB8B /* ShellScript */,
 			);
 			buildRules = (
 			);

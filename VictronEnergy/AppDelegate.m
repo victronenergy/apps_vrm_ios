@@ -22,8 +22,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [Fabric with:@[CrashlyticsKit]];
-
+    [Fabric with:@[[Crashlytics class]]];
     // Override point for customization after application launch.
 
     [[UINavigationBar appearance]setBarTintColor:COLOR_NAV_BAR];
