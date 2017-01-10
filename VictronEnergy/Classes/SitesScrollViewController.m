@@ -269,10 +269,8 @@ typedef enum ScrollDirection {
     }
 
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%li",WEBVIEW_URL_REQUEST_SITE, (long)self.selectedSite.siteID]];
-    NSString *body = [NSString stringWithFormat: @"username=%@&password=%@",username,password];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL: url];
     [request setHTTPMethod: @"GET"];
-    [request setHTTPBody: [body dataUsingEncoding: NSUTF8StringEncoding]];
 
     SVWebViewController *webViewController = [[SVWebViewController alloc] initWithURLRequest:request];
     webViewController.title = self.selectedSite.name;
