@@ -88,8 +88,11 @@
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     M2MWidgetCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"M2MWidgetCollectionCell" forIndexPath:indexPath];
-    [cell setDataWithSummaryWidget:[self.widgetsArray objectAtIndex:indexPath.row] andIsLoading:self.isLoading];
-
+    if ([self.widgetsArray count] > 0) {
+        [cell setDataWithSummaryWidget:[self.widgetsArray objectAtIndex:indexPath.row] andIsLoading:self.isLoading];
+    } else {
+        [cell setDataWithSummaryWidget:nil andIsLoading:false];
+    }
     return cell;
 }
 
