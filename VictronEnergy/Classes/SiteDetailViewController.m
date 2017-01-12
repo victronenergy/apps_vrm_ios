@@ -667,6 +667,8 @@ const NSInteger kCollectionViewRowHeigthIPad = 114;
 {
     if (indexPath.row == [self.selectedSite.imageURLS count]) {
 
+        NSLog(@"Show action sheet for photos!");
+        
         // open an actionsheet with the camera or photelibrary options
         [[[UIActionSheet alloc] initWithTitle:nil
                                      delegate:self
@@ -704,7 +706,9 @@ const NSInteger kCollectionViewRowHeigthIPad = 114;
 
 #pragma mark - image picker
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    NSLog(@"Clicked action sheet button: %ld", (long)buttonIndex);
+    
     switch (buttonIndex) {
         case 0:
             [self getPhotoWithSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -719,16 +723,28 @@ const NSInteger kCollectionViewRowHeigthIPad = 114;
 
 -(void)getPhotoWithSourceType:(UIImagePickerControllerSourceType)sourceType{
 
+    NSLog(@"getPhotoWithSourceType %ld", (long)sourceType);
+    
     if([UIImagePickerController isSourceTypeAvailable:sourceType])
     {
+        NSLog(@"Source type is available");
+        
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
 
         imagePicker.allowsEditing = NO;
         imagePicker.delegate = self;
         imagePicker.sourceType = sourceType;
         imagePicker.view.backgroundColor = [UIColor whiteColor];
+        
+//        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+//            [self.parentViewController presentViewController:imagePicker animated:NO completion:nil];
+//        } else {
+//           
+//        }
 
-        [self presentViewController:imagePicker animated:YES completion:nil];
+         [self presentViewController:imagePicker animated:NO completion:nil];
+    } else {
+        NSLog(@"Source type is not available?");
     }
 }
 
