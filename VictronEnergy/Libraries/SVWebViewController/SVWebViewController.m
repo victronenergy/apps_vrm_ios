@@ -20,7 +20,6 @@
 @property (nonatomic, strong, readonly) UIBarButtonItem *actionBarButtonItem;
 @property (nonatomic, strong, readonly) UIActionSheet *pageActionSheet;
 
-@property (nonatomic, strong) UIWebView *mainWebView;
 @property (nonatomic, strong) NSURL *URL;
 @property (nonatomic, strong) NSURLRequest *URLRequest;
 @property (nonatomic) bool done;
@@ -361,15 +360,15 @@
 
     if ([error code] != NSURLErrorCancelled) {
         //show error alert, etc.
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-
-        UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:NSLocalizedString(@"error_title", @"error_title")
-                              message:NSLocalizedString(@"error_message", @"error_message")
-                              delegate:self
-                              cancelButtonTitle:NSLocalizedString(@"error_message_cancel_button", @"error_message_cancel_button")
-                              otherButtonTitles:nil];
-        [alert show];
+//        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//
+//        UIAlertView *alert = [[UIAlertView alloc]
+//                              initWithTitle:NSLocalizedString(@"error_title", @"error_title")
+//                              message:NSLocalizedString(@"error_message", @"error_message")
+//                              delegate:self
+//                              cancelButtonTitle:NSLocalizedString(@"error_message_cancel_button", @"error_message_cancel_button")
+//                              otherButtonTitles:nil];
+//        [alert show];
 
     }
     [SVProgressHUD dismiss];

@@ -259,6 +259,7 @@ typedef enum ScrollDirection {
 
 -(void)webviewButtonPressed:(id)sender
 {
+//    BUTTON PRESSED. START SIGN IN FLOW
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEY_CHAIN_IDENTIFIER accessGroup:nil];
     NSString *password = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
     NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
@@ -272,11 +273,11 @@ typedef enum ScrollDirection {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL: url];
     [request setHTTPMethod: @"GET"];
 
-    SVWebViewController *webViewController = [[SVWebViewController alloc] initWithURLRequest:request];
+    SVWebViewController *webViewController = [[SVWebViewController alloc] init];
     webViewController.title = self.selectedSite.name;
     
     NSString *path = [NSString stringWithFormat:@"/installation/%ld/dashboard", (long)self.selectedSite.siteID];
-    [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:path controller:self];
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:path controller:self site:self.selectedSite.siteID];
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [self.navigationController pushViewController:webViewController animated:YES];

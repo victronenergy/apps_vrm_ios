@@ -131,6 +131,7 @@
 #define WEBVIEW_URL_REQUEST                            [NSURL URLWithString:@"https://vrm.victronenergy.com/"]
 #define WEBVIEW_URL_REQUEST_SITE                       @"https://vrm.victronenergy.com/"
 #define WEBVIEW_URL_LOGIN_REQUEST                      @"https://vrmapi.victronenergy.com/v2/auth/login"
+#define GENERATE_TOKEN_URL                             @"https://vrmapi.victronenergy.com/v2/auth/generatetoken"
 
 #define RETURN_CODE_OK                                 200
 #define RETURN_CODE_SESSION_EXPIRED                    401

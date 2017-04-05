@@ -91,16 +91,21 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-- (void)getToken:(NSString*)username password:(NSString*)password web:(SVWebViewController *) webview redirect:(NSString*)path controller:(UIViewController *)view{
+- (void)getToken:(NSString*)username password:(NSString*)password web:(SVWebViewController *) webview redirect:(NSString*)path controller:(UIViewController *)view site:(NSInteger *)siteId{
     self.controller = view;
+    self.selectedSiteId = siteId;
     
-    if ([[self globalEmail] isEqualToString:username]) {
-        if ([[self token] isEqualToString:@""]) {
-            [self requestToken:username password:password web:webview redirect:path];
-        } else {
-            [webview setToken:[self token] redirect:path];
-        }
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [self.controller.view addSubview:self.activityIndicator];
+    [self.activityIndicator setHidden:FALSE];
+    [self.activityIndicator startAnimating];
+    
+    NSLog(@"TOKEN: %@", [self userToken]);
+    if ([self userToken] != (id)[NSNull null] && [self userToken].length > 0) {
+        NSLog(@"Token is set, generate auth token");
+        [self generateToken:[self userToken] web:webview];
     } else {
+        NSLog(@"Token is empty, get a user token");
         [self requestToken:username password:password web:webview redirect:path];
     }
 }
@@ -109,11 +114,78 @@
     
     NSLog(@"Token request %@ %@", username, password);
     
-    NSMutableDictionary *requestParameters = [[NSMutableDictionary alloc] init];
-    [requestParameters setValue:username forKey:@"username"];
-    [requestParameters setValue:password forKey:@"password"];
+    //Check if user token is present. If it is -> generate token and load webview
+    //If not -> Get a user token, generate token and load webview
     
-    NSLog(@"Token params: %@", requestParameters);
+    if (self.userToken == (id)[NSNull null] || self.userToken.length == 0 ) {
+        //The user doesn't have a user token, fetch one from the api
+        NSMutableDictionary *requestParameters = [[NSMutableDictionary alloc] init];
+        [requestParameters setValue:username forKey:@"username"];
+        [requestParameters setValue:password forKey:@"password"];
+        
+        NSLog(@"Token params: %@", requestParameters);
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        manager.responseSerializer = [AFJSONResponseSerializer serializer];
+        //    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+        manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+        [manager POST:WEBVIEW_URL_LOGIN_REQUEST parameters:requestParameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            //TODO: Test API and see if this alert is really needed in the success block
+            if ([responseObject isKindOfClass:[NSArray class]]) {
+                NSLog(@"Weird array response");
+            } else if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *responseDict = responseObject;
+                
+                NSLog(@"%@", responseDict);
+                
+                if ((int)[responseDict valueForKey:@"verification_sent"]) {
+                    NSLog(@"Two factor auth is enabled");
+                    [self showTwoFactorDialog:username password:password web:webview redirect:path];
+                } else if ([responseDict valueForKey:@"token"] != (id)[NSNull null]) {
+                    NSLog(@"Successful login");
+//
+                    [self storeUserEmail:username];
+//
+                    NSString *token = [responseDict valueForKey:@"token"];
+//                    [webview setToken:token redirect:path];
+                    self.userToken = token;
+                    NSLog(@"Received User Token: %@", token);
+                    
+                    //Generate a sign in token
+                    [self generateToken:self.userToken web:webview];
+                } else {
+                    NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login"];
+                    NSLog(@"Got null token and no verification sent. SMS credits are empty?: %@", urlstring);
+                    NSURL *url = [NSURL URLWithString:urlstring];
+                    [webview loadURL:url];
+                    
+                    [self.activityIndicator stopAnimating];
+                    [self.activityIndicator setHidden:TRUE];
+                }
+            }
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Token Request Failed: %@", error);
+            
+            NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login"];
+            NSLog(@"Failure: %@", urlstring);
+            NSURL *url = [NSURL URLWithString:urlstring];
+            [webview loadURL:url];
+            
+            [self.activityIndicator stopAnimating];
+            [self.activityIndicator setHidden:TRUE];
+        }];
+    } else {
+        //The user already has a token. Generate sign in token and redirect the webview
+        [self generateToken:self.userToken web:webview];
+    }
+}
+
+- (void)generateToken:(NSString *)token web:(SVWebViewController *) webview {
+    NSMutableDictionary *requestParameters = [[NSMutableDictionary alloc] init];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
@@ -123,7 +195,13 @@
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    [manager POST:WEBVIEW_URL_LOGIN_REQUEST parameters:requestParameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSString *string = @"Bearer ";
+    NSMutableString *authString = [string mutableCopy];
+    [authString appendString:token];
+    
+    [manager.requestSerializer setValue:authString forHTTPHeaderField:@"X-Authorization"];
+    
+    [manager GET:GENERATE_TOKEN_URL parameters:requestParameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //TODO: Test API and see if this alert is really needed in the success block
         if ([responseObject isKindOfClass:[NSArray class]]) {
             NSLog(@"Weird array response");
@@ -132,27 +210,45 @@
             
             if ([responseDict valueForKey:@"verification_sent"]) {
                 NSLog(@"Two factor auth is enabled");
-                [self showTwoFactorDialog:username password:password web:webview redirect:path];
+//                [self showTwoFactorDialog:username password:password web:webview redirect:path];
             } else {
                 NSLog(@"Successful login");
+                //
+//                [self storeUserEmail:username];
+                //
+                NSString *t = [responseDict valueForKey:@"token"];
+                //                    [webview setToken:token redirect:path];
+//                self.token = t;
+                NSLog(@"Received Generated Token: %@", t);
                 
-                [self storeUserEmail:username];
+                NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login?token=%@&redirect=/installation/%ld/dashboard", t, (long)self.selectedSiteId];
                 
-                NSString *token = [responseDict valueForKey:@"token"];
-                [webview setToken:token redirect:path];
-                self.token = token;
-                NSLog(@"Received Token: %@", token);
+                NSLog(@"Website Url: %@", urlstring);
+                
+                NSURL *url = [NSURL URLWithString:urlstring];
+                [webview loadURL:url];
+                
+                [self.activityIndicator stopAnimating];
+                [self.activityIndicator setHidden:TRUE];
+                
+                //Generate a sign in token
+//                [self generateToken:self.userToken web:webview];
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Token Request Failed: %@", error);
+        
+        NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login"];
+        NSLog(@"Failure: %@", urlstring);
+        NSURL *url = [NSURL URLWithString:urlstring];
+        [webview loadURL:url];
+        
+        [self.activityIndicator stopAnimating];
+        [self.activityIndicator setHidden:TRUE];
     }];
 }
 
 - (void)requestTwoFactorToken:(NSString *)username password:(NSString *)password code:(NSString *)code web:(SVWebViewController *) webview redirect:(NSString*)path{
-    
-    NSLog(@"Token request %@ %@", username, password);
-    
     NSMutableDictionary *requestParameters = [[NSMutableDictionary alloc] init];
     [requestParameters setValue:username forKey:@"username"];
     [requestParameters setValue:password forKey:@"password"];
@@ -175,7 +271,7 @@
         } else if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *responseDict = responseObject;
             
-            if ([responseDict valueForKey:@"verification_sent"]) {
+            if ([responseDict valueForKey:@"verification_sent"] || [responseDict valueForKey:@"token"] == (id)[NSNull null]) {
                 NSLog(@"Two factor auth is enabled");
                 [self showTwoFactorDialog:username password:password web:webview redirect:path];
             } else {
@@ -184,13 +280,23 @@
                 [self storeUserEmail:username];
                 
                 NSString *t = [responseDict valueForKey:@"token"];
-                [webview setToken:t redirect:path];
-                _token = t;
+//                [webview setToken:t redirect:path];
+                self.userToken = t;
                 NSLog(@"Received Token: %@", t);
+                
+                [self generateToken:t web:webview];
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Token Request Failed: %@", error);
+        
+        NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login"];
+        NSLog(@"Failure: %@", urlstring);
+        NSURL *url = [NSURL URLWithString:urlstring];
+        [webview loadURL:url];
+        
+        [self.activityIndicator stopAnimating];
+        [self.activityIndicator setHidden:TRUE];
     }];
 }
 
@@ -216,13 +322,28 @@
         NSString *code = textfield.text;
         
         if (![code  isEqual: @""]) {
+            //Try to get a user token with the entered sms code
             [self requestTwoFactorToken:username password:password code:code web:webview redirect:path];
         } else {
+            //No sms code given in, just show them a sign in page
+            NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login"];
+            NSLog(@"CANCEL SMS token, show login page: %@", urlstring);
+            NSURL *url = [NSURL URLWithString:urlstring];
+            [webview loadURL:url];
             [self.controller dismissViewControllerAnimated:YES completion:nil];
+            [self.activityIndicator stopAnimating];
+            [self.activityIndicator setHidden:TRUE];
         }
     }]];
     [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        //Canceled sms token dialog, show a login page
+        NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login"];
+        NSLog(@"CANCEL SMS token, show login page: %@", urlstring);
+        NSURL *url = [NSURL URLWithString:urlstring];
+        [webview loadURL:url];
         [self.controller dismissViewControllerAnimated:YES completion:nil];
+        [self.activityIndicator stopAnimating];
+        [self.activityIndicator setHidden:TRUE];
     }]];
     [self.controller presentViewController:alertController animated:YES completion:nil];
 }

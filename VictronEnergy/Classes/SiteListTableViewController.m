@@ -356,7 +356,7 @@ const float kSearchBarHeight = 44.0f;
     SVWebViewController *webViewController = [[SVWebViewController alloc] initWithURLRequest:request];
     webViewController.title = NSLocalizedString(@"website_title", @"website_title");
 
-     [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:@"/" controller:self];
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:@"/" controller:self site:self.selectedSite.siteID];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [self.navigationController pushViewController:webViewController animated:YES];

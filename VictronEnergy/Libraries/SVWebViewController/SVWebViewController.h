@@ -17,6 +17,9 @@
 - (id)initWithURLRequest:(NSURLRequest*)URLRequest;
 - (void)setToken:(NSString*)token redirect:(NSString*)path;
 - (bool)isDone;
+- (void)loadURL:(NSURL *)pageURL;
+
+@property (nonatomic, strong) UIWebView *mainWebView;
 @property (nonatomic, readwrite) SVWebViewControllerAvailableActions availableActions;
 
 @end
