@@ -280,6 +280,8 @@ const float kSearchBarHeight = 44.0f;
                                                                label:@"logout_button"
                                                                value:nil] build]];
 
+        ((AppDelegate *)[[UIApplication sharedApplication] delegate]).userToken = @"";
+        
         M2MLoginService *loginService = [M2MLoginService sharedInstance];
         [loginService logout];
 
