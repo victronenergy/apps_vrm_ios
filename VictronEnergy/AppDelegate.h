@@ -16,10 +16,13 @@
 @property (strong, nonatomic) NSMutableString *token;
 
 @property (strong, nonatomic) UIViewController *controller;
+@property (strong, nonatomic) UINavigationController* ipadController;
 
 @property (strong, nonatomic) NSString *userToken;
 @property (nonatomic) NSInteger *selectedSiteId;
 @property (nonatomic) UIActivityIndicatorView* activityIndicator;
+
+- (void)showAlertIn:(UINavigationController *)controller;
 
 - (void) requestTwoFactorToken:(NSString *)username password:(NSString *)password code:(NSString *)code web:(SVWebViewController *) webview redirect:(NSString*)path;
 - (void) requestToken:(NSString*)username password:(NSString*)password web:(SVWebViewController *) webview redirect:(NSString*)path;

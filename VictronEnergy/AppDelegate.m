@@ -305,6 +305,10 @@
     delegate.globalEmail = email;
 }
 
+- (void)showAlertIn:(UINavigationController *)controller {
+    self.ipadController = controller;
+}
+
 - (void)showTwoFactorDialog:(NSString *)username password:(NSString *)password web:(SVWebViewController *) webview redirect:(NSString*)path{
     UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"Verification"
                                                                               message: @"Enter the code sent to you via SMS in the field below"
@@ -345,7 +349,12 @@
         [self.activityIndicator stopAnimating];
         [self.activityIndicator setHidden:TRUE];
     }]];
-    [self.controller presentViewController:alertController animated:YES completion:nil];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [self.controller presentViewController:alertController animated:YES completion:nil];
+    } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self.ipadController presentViewController:alertController animated:YES completion:nil];
+    }
 }
 
 @end

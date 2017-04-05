@@ -287,7 +287,12 @@ typedef enum ScrollDirection {
         modalNavigationController.navigationBar.translucent = NO;
         NSString *backButton = NSLocalizedString(@"back_button_webview", @"back_button_webview");
         webViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:backButton style:UIBarButtonItemStylePlain target:self action:@selector(backFromWebview)];
+        
+        [(AppDelegate *)[[UIApplication sharedApplication] delegate] showAlertIn:modalNavigationController];
+        
         [self presentViewController:modalNavigationController animated:YES completion:nil];
+        
+//        [self.navigationController pushViewController:webViewController animated:YES];
     }
 
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
