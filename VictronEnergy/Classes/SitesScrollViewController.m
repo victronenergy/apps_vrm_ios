@@ -276,9 +276,10 @@ typedef enum ScrollDirection {
     SVWebViewController *webViewController = [[SVWebViewController alloc] init];
     webViewController.title = self.selectedSite.name;
     
-    NSString *path = [NSString stringWithFormat:@"/installation/%ld/dashboard", (long)self.selectedSite.siteID];
-    [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:path controller:self site:self.selectedSite.siteID];
-
+    NSLog(@"Site scrollView controller");
+    
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:@"/" controller:self site:self.selectedSite.siteID];
+    
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [self.navigationController pushViewController:webViewController animated:YES];
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -305,6 +306,9 @@ typedef enum ScrollDirection {
 
 - (void)backFromWebview
 {
+    NSLog(@"Back from Webview SiteScrollView");
+    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).selectedSiteId = 0;
+    self.selectedSite = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

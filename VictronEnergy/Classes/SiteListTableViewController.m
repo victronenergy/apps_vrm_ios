@@ -350,15 +350,13 @@ const float kSearchBarHeight = 44.0f;
 
     NSString *username = credentials.username;
     NSString *password = credentials.password;
-    
-    NSURL *url = WEBVIEW_URL_REQUEST;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL: url];
-    [request setHTTPMethod: @"GET"];
 
-    SVWebViewController *webViewController = [[SVWebViewController alloc] initWithURLRequest:request];
+    SVWebViewController *webViewController = [[SVWebViewController alloc] init];
     webViewController.title = NSLocalizedString(@"website_title", @"website_title");
 
-    [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:@"/" controller:self site:self.selectedSite.siteID];
+    NSLog(@"Site list table contr");
+    
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] getToken:username password:password web:webViewController redirect:@"/" controller:self site:0];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [self.navigationController pushViewController:webViewController animated:YES];
@@ -380,6 +378,9 @@ const float kSearchBarHeight = 44.0f;
 
 - (void)backFromWebview
 {
+    NSLog(@"Back from Webview SiteListTableView");
+    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).selectedSiteId = 0;
+    self.selectedSite = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

@@ -100,7 +100,7 @@
     [self.activityIndicator setHidden:FALSE];
     [self.activityIndicator startAnimating];
     
-    NSLog(@"TOKEN: %@", [self userToken]);
+    NSLog(@"TOKEN: %@ SITE ID: %ld", [self userToken], (long)self.selectedSiteId);
     if ([self userToken] != (id)[NSNull null] && [self userToken].length > 0) {
         NSLog(@"Token is set, generate auth token");
         [self generateToken:[self userToken] web:webview];
@@ -108,6 +108,10 @@
         NSLog(@"Token is empty, get a user token");
         [self requestToken:username password:password web:webview redirect:path];
     }
+}
+
+- (void)resetSelectedSite {
+    self.selectedSiteId = 0;
 }
 
 - (void)requestToken:(NSString*)username password:(NSString*)password web:(SVWebViewController *) webview redirect:(NSString*)path{
@@ -165,6 +169,7 @@
                     
                     [self.activityIndicator stopAnimating];
                     [self.activityIndicator setHidden:TRUE];
+                    [self.alertController dismissViewControllerAnimated:YES completion:nil];
                 }
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -221,7 +226,13 @@
 //                self.token = t;
                 NSLog(@"Received Generated Token: %@", t);
                 
-                NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login?token=%@&redirect=/installation/%ld/dashboard", t, (long)self.selectedSiteId];
+                NSString *urlstring = [NSString alloc];
+                
+                if (self.selectedSiteId == 0) {
+                    urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login?token=%@&redirect=/installation-overview", t];
+                } else {
+                    urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login?token=%@&redirect=/installation/%ld/dashboard", t, (long)self.selectedSiteId];
+                }
                 
                 NSLog(@"Website Url: %@", urlstring);
                 
@@ -271,10 +282,10 @@
         } else if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *responseDict = responseObject;
             
-            if ([responseDict valueForKey:@"verification_sent"] || [responseDict valueForKey:@"token"] == (id)[NSNull null]) {
+            if ([responseDict valueForKey:@"verification_sent"]) {
                 NSLog(@"Two factor auth is enabled");
                 [self showTwoFactorDialog:username password:password web:webview redirect:path];
-            } else {
+            } else if([responseDict valueForKey:@"token"] != (id)[NSNull null]) {
                 NSLog(@"Successful login");
                 
                 [self storeUserEmail:username];
@@ -285,6 +296,15 @@
                 NSLog(@"Received Token: %@", t);
                 
                 [self generateToken:t web:webview];
+            } else {
+                NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login"];
+                NSLog(@"Got null token and no verification sent. SMS credits are empty?: %@", urlstring);
+                NSURL *url = [NSURL URLWithString:urlstring];
+                [webview loadURL:url];
+                
+                [self.activityIndicator stopAnimating];
+                [self.activityIndicator setHidden:TRUE];
+                [self.alertController dismissViewControllerAnimated:YES completion:nil];
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -310,23 +330,23 @@
 }
 
 - (void)showTwoFactorDialog:(NSString *)username password:(NSString *)password web:(SVWebViewController *) webview redirect:(NSString*)path{
-    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"Verification"
+    self.alertController = [UIAlertController alertControllerWithTitle: @"Verification"
                                                                               message: @"Enter the code sent to you via SMS in the field below"
                                                                        preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+    [self.alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = @"Verification Code";
         textField.textColor = [UIColor blueColor];
         textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         textField.borderStyle = UITextBorderStyleRoundedRect;
     }];
-    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        NSArray * textfields = alertController.textFields;
+    [self.alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSArray * textfields = self.alertController.textFields;
         UITextField * textfield = textfields[0];
         
         NSString *code = textfield.text;
         
         if (![code  isEqual: @""]) {
-            //Try to get a user token with the entered sms code
+            //Try to get a user token with the entered sms codev
             [self requestTwoFactorToken:username password:password code:code web:webview redirect:path];
         } else {
             //No sms code given in, just show them a sign in page
@@ -339,7 +359,7 @@
             [self.activityIndicator setHidden:TRUE];
         }
     }]];
-    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    [self.alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         //Canceled sms token dialog, show a login page
         NSString *urlstring = [NSString stringWithFormat:@"https://vrm.victronenergy.com/login"];
         NSLog(@"CANCEL SMS token, show login page: %@", urlstring);
@@ -351,9 +371,9 @@
     }]];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self.controller presentViewController:alertController animated:YES completion:nil];
+        [self.controller presentViewController:self.alertController animated:YES completion:nil];
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        [self.ipadController presentViewController:alertController animated:YES completion:nil];
+        [self.ipadController presentViewController:self.alertController animated:YES completion:nil];
     }
 }
 

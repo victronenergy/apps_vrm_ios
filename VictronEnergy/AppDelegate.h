@@ -21,6 +21,7 @@
 @property (strong, nonatomic) NSString *userToken;
 @property (nonatomic) NSInteger *selectedSiteId;
 @property (nonatomic) UIActivityIndicatorView* activityIndicator;
+@property (nonatomic) UIAlertController* alertController;
 
 - (void)showAlertIn:(UINavigationController *)controller;
 
